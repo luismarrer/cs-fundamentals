@@ -46,3 +46,7 @@ preset "Astro"), Netlify o GitHub Pages.
 │   └── styles/global.css # Tailwind: tokens de tema + capa de componentes
 └── astro.config.mjs
 ```
+
+## Licencia
+
+[MIT](LICENSE)
