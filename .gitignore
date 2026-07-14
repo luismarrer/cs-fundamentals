@@ -1,3 +1,10 @@
-.DS_Store
+# build
+dist/
+.astro/
+
+# deps
 node_modules/
+
+# misc
+.DS_Store
 .vercel/

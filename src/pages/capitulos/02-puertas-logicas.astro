@@ -1,0 +1,189 @@
+---
+import ChapterLayout from '../../layouts/ChapterLayout.astro';
+---
+
+<ChapterLayout
+  title="02 · Puertas lógicas — Fundamentos de Computación"
+  description="Cómo se construyen las puertas lógicas NOT, AND, OR, NAND y XOR a partir de transistores, y por qué NAND es universal."
+  kicker="Capítulo 02"
+  heading="Puertas lógicas: de interruptores a decisiones"
+  prev={{ href: '/capitulos/01-el-transistor', label: 'Capítulo 01 · El transistor' }}
+  next={{ href: '/capitulos/03-del-bit-a-la-suma', label: 'Capítulo 03 · Del bit a la suma' }}
+>
+  <p class="text-lg text-soft">
+    Un transistor solo sabe abrir o cerrar el paso. Pero conecta dos en serie, dos en paralelo, o uno
+    "al revés", y de pronto el circuito empieza a <strong>responder preguntas</strong>: ¿se cumplen
+    ambas condiciones? ¿alguna? ¿ninguna? Eso son las puertas lógicas.
+  </p>
+
+  <h2>La lógica ya estaba inventada</h2>
+  <p>
+    En 1854, casi un siglo antes del transistor, George Boole demostró que el razonamiento lógico
+    podía reducirse a álgebra con solo dos valores: <em>verdadero</em> y <em>falso</em>. En 1937,
+    Claude Shannon (con 21 años, en su tesis de máster) se dio cuenta de algo extraordinario: <strong>los circuitos de interruptores obedecen exactamente el álgebra de Boole</strong>.
+    Verdadero = 1 = voltaje alto. Falso = 0 = voltaje bajo. La lógica se podía <em>fabricar</em>.
+  </p>
+
+  <h2>Tres construcciones, toda la lógica</h2>
+  <ul>
+    <li>
+      <strong>Serie → AND.</strong> Dos interruptores uno detrás de otro: la corriente solo pasa si <em>ambos</em> están cerrados. <code>A AND B</code>.
+    </li>
+    <li>
+      <strong>Paralelo → OR.</strong> Dos caminos alternativos: la corriente pasa si <em>al menos uno</em> está cerrado. <code>A OR B</code>.
+    </li>
+    <li>
+      <strong>Inversión → NOT.</strong> Un transistor colocado de forma que, cuando su entrada vale
+      1, <em>derriba</em> la salida a 0, y viceversa. La salida es siempre lo contrario de la
+      entrada.
+    </li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 640 170" xmlns="http://www.w3.org/2000/svg" aria-label="Interruptores en serie (AND) y en paralelo (OR)">
+      <text x="150" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">Serie = AND</text>
+      <line x1="30" y1="70" x2="90" y2="70" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="90" y1="70" x2="130" y2="46" stroke="#2563eb" stroke-width="3"></line>
+      <circle cx="90" cy="70" r="4" fill="#2563eb"></circle>
+      <text x="110" y="95" text-anchor="middle" font-size="12" fill="currentColor">A</text>
+      <line x1="140" y1="70" x2="200" y2="70" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="200" y1="70" x2="240" y2="46" stroke="#2563eb" stroke-width="3"></line>
+      <circle cx="200" cy="70" r="4" fill="#2563eb"></circle>
+      <text x="220" y="95" text-anchor="middle" font-size="12" fill="currentColor">B</text>
+      <line x1="250" y1="70" x2="300" y2="70" stroke="#9aa5b5" stroke-width="3"></line>
+      <text x="490" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">Paralelo = OR</text>
+      <line x1="370" y1="85" x2="410" y2="85" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="410" y1="85" x2="410" y2="55" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="410" y1="85" x2="410" y2="115" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="410" y1="55" x2="440" y2="55" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="440" y1="55" x2="480" y2="35" stroke="#2563eb" stroke-width="3"></line>
+      <circle cx="440" cy="55" r="4" fill="#2563eb"></circle>
+      <text x="455" y="80" text-anchor="middle" font-size="12" fill="currentColor">A</text>
+      <line x1="410" y1="115" x2="440" y2="115" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="440" y1="115" x2="480" y2="95" stroke="#2563eb" stroke-width="3"></line>
+      <circle cx="440" cy="115" r="4" fill="#2563eb"></circle>
+      <text x="455" y="140" text-anchor="middle" font-size="12" fill="currentColor">B</text>
+      <line x1="490" y1="55" x2="520" y2="55" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="490" y1="115" x2="520" y2="115" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="520" y1="55" x2="520" y2="115" stroke="#9aa5b5" stroke-width="3"></line>
+      <line x1="520" y1="85" x2="560" y2="85" stroke="#9aa5b5" stroke-width="3"></line>
+    </svg>
+    <figcaption>
+      En serie, la corriente necesita que A <em>y</em> B conduzcan. En paralelo, le basta con A <em>o</em> B.
+    </figcaption>
+  </figure>
+
+  <h2>Las seis puertas que hay que conocer</h2>
+  <div class="my-6 overflow-x-auto">
+    <table class="truth">
+      <thead>
+        <tr>
+          <th>A</th><th>B</th>
+          <th>NOT A</th><th>AND</th><th>OR</th><th>NAND</th><th>NOR</th><th>XOR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td></tr>
+        <tr><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td></tr>
+        <tr><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td></tr>
+        <tr><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <strong>XOR</strong> ("o exclusivo") merece atención especial: vale 1 cuando las entradas son <em>distintas</em>. Guárdala en la memoria: en el próximo capítulo descubrirás que XOR es,
+    literalmente, una suma.
+  </p>
+
+  <div class="demo" id="demo-gates">
+    <h3>🎛️ Pruébalo: laboratorio de puertas</h3>
+    <p class="demo-hint">Cambia las entradas A y B y observa cómo responde cada puerta al instante.</p>
+    <div class="demo-row">
+      <span class="demo-label">Entrada A:</span>
+      <button class="bit" id="in-a" aria-pressed="false">0</button>
+      <span class="demo-label">Entrada B:</span>
+      <button class="bit" id="in-b" aria-pressed="false">0</button>
+    </div>
+    <div class="demo-row !gap-2">
+      <span class="readout">NOT A = <span id="g-not">1</span></span>
+      <span class="readout">AND = <span id="g-and">0</span></span>
+      <span class="readout">OR = <span id="g-or">0</span></span>
+      <span class="readout">NAND = <span id="g-nand">1</span></span>
+      <span class="readout">NOR = <span id="g-nor">1</span></span>
+      <span class="readout">XOR = <span id="g-xor">0</span></span>
+    </div>
+    <p class="demo-hint mt-4">
+      ¿Quieres construir tus propios circuitos con estas piezas? Ve a <a href="https://boolean-synth.vercel.app/" target="_blank" rel="noopener">Boolean Synth</a>,
+      mi diseñador interactivo de circuitos lógicos.
+    </p>
+  </div>
+
+  <h2>CMOS: la pareja perfecta</h2>
+  <p>
+    En los chips reales cada puerta se fabrica con la técnica <strong>CMOS</strong>: cada entrada
+    controla a la vez un transistor NMOS (que conduce con 1) y su complementario PMOS (que conduce
+    con 0). Uno conecta la salida a la alimentación, el otro a tierra, y <em>nunca conducen los dos a
+    la vez</em>. Resultado: la salida siempre está firmemente en 0 o en 1, y el circuito solo consume
+    energía en el instante de conmutar. Por eso tu móvil no se derrite. Un inversor NOT son 2
+    transistores; una NAND, 4.
+  </p>
+
+  <h2>NAND: la puerta universal</h2>
+  <p>
+    Aquí llega uno de los resultados más elegantes de toda la ingeniería: <strong>con solo puertas NAND puedes construir cualquier otra puerta</strong>, y por tanto
+    cualquier circuito digital que exista:
+  </p>
+  <ul>
+    <li><code>NOT A = A NAND A</code></li>
+    <li><code>A AND B = NOT (A NAND B)</code></li>
+    <li><code>A OR B = (NOT A) NAND (NOT B)</code> — esto es la ley de De Morgan en acción</li>
+  </ul>
+  <p>
+    Esto no es solo una curiosidad: simplifica radicalmente la fabricación. Si dominas la producción
+    de una sola pieza, dominas la producción de <em>todas las máquinas lógicas posibles</em>.
+  </p>
+
+  <aside class="note">
+    <strong>Resumen del capítulo:</strong> los transistores en serie, en paralelo y en configuración
+    inversora materializan el álgebra de Boole: AND, OR y NOT. De ahí salen NAND, NOR y XOR, y con
+    NAND sola puede construirse todo lo demás. Ya tenemos piezas que deciden; ahora vamos a
+    enseñarles a contar.
+  </aside>
+</ChapterLayout>
+
+<script>
+  const btnA = document.getElementById('in-a')!;
+  const btnB = document.getElementById('in-b')!;
+
+  function val(btn: HTMLElement) {
+    return btn.getAttribute('aria-pressed') === 'true' ? 1 : 0;
+  }
+
+  function paint(id: string, v: number) {
+    const el = document.getElementById(id)!;
+    el.textContent = String(v);
+    el.style.color = v ? 'var(--ok)' : 'var(--off)';
+    el.style.fontWeight = '700';
+  }
+
+  function update() {
+    const a = val(btnA), b = val(btnB);
+    paint('g-not', a ? 0 : 1);
+    paint('g-and', a & b);
+    paint('g-or', a | b);
+    paint('g-nand', (a & b) ? 0 : 1);
+    paint('g-nor', (a | b) ? 0 : 1);
+    paint('g-xor', a ^ b);
+  }
+
+  [btnA, btnB].forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const on = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(on));
+      btn.textContent = on ? '1' : '0';
+      update();
+    })
+  );
+
+  update();
+</script>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface PagerLink {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  kicker: string;
+  heading: string;
+  prev?: PagerLink;
+  next?: PagerLink;
+}
+
+const { title, description, kicker, heading, prev, next } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="chapter mx-auto max-w-[760px] px-5 pb-8 pt-12">
+    <p class="mb-2 text-sm font-bold uppercase tracking-widest text-accent">{kicker}</p>
+    <h1 class="mb-4 text-[clamp(1.8rem,4vw,2.5rem)] font-extrabold leading-tight tracking-tight">
+      {heading}
+    </h1>
+
+    <slot />
+
+    <nav class="mt-14 flex justify-between gap-4 border-t border-line pt-6 text-[0.95rem] font-semibold">
+      {prev ? <a class="max-w-[48%] hover:underline" href={prev.href}>← {prev.label}</a> : <span />}
+      {next ? <a class="max-w-[48%] hover:underline" href={next.href}>{next.label} →</a> : <span />}
+    </nav>
+  </main>
+</BaseLayout>

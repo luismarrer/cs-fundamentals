@@ -1,0 +1,176 @@
+---
+import ChapterLayout from '../../layouts/ChapterLayout.astro';
+---
+
+<ChapterLayout
+  title="03 · Del bit a la suma — Fundamentos de Computación"
+  description="Números binarios, medio sumador, sumador completo y la ALU: cómo las puertas lógicas hacen aritmética."
+  kicker="Capítulo 03"
+  heading="Del bit a la suma: circuitos que hacen matemáticas"
+  prev={{ href: '/capitulos/02-puertas-logicas', label: 'Capítulo 02 · Puertas lógicas' }}
+  next={{ href: '/capitulos/04-memoria', label: 'Capítulo 04 · Memoria' }}
+>
+  <p class="text-lg text-soft">
+    Tenemos puertas que responden preguntas de sí o no. El salto que vamos a dar ahora parece
+    imposible y sin embargo cabe en cinco puertas: <strong>convertir lógica en aritmética</strong>.
+    Al final de este capítulo habrás visto, pieza a pieza, un circuito que suma de verdad.
+  </p>
+
+  <h2>Contar con dos dedos</h2>
+  <p>
+    Nuestros cables solo distinguen dos estados, así que necesitamos escribir números con solo dos
+    símbolos. Es el <strong>sistema binario</strong>, y funciona exactamente igual que el decimal,
+    solo que cada posición vale el doble de la anterior en vez de diez veces más:
+  </p>
+  <div class="my-6 overflow-x-auto">
+    <table class="truth">
+      <thead><tr><th>Decimal</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
+      <tbody>
+        <tr><td>3</td><td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td></tr>
+        <tr><td>5</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td></tr>
+        <tr><td>11</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    La humanidad lleva milenios representando números por posiciones: es exactamente lo que hace un <a href="https://v0-abacus-learning-system.vercel.app/" target="_blank" rel="noopener">ábaco</a>,
+    donde cada columna vale diez veces la anterior. El binario solo cambia la base: cada "columna"
+    (bit) vale el doble.
+  </p>
+
+  <h2>La tabla de sumar más corta del mundo</h2>
+  <p>En binario, sumar dos bits solo tiene cuatro casos:</p>
+  <div class="my-6 overflow-x-auto">
+    <table class="truth">
+      <thead><tr><th>A</th><th>B</th><th>Suma</th><th>Acarreo</th></tr></thead>
+      <tbody>
+        <tr><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td></tr>
+        <tr><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td></tr>
+        <tr><td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td></tr>
+        <tr><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Ahora mira las columnas con ojos del capítulo anterior. La columna <em>Suma</em>… <strong>es la tabla de verdad de XOR</strong>. Y la columna <em>Acarreo</em> <strong>es AND</strong>. No hay que inventar nada: la aritmética ya estaba escondida dentro de la
+    lógica.
+  </p>
+  <aside class="note">
+    <strong>Medio sumador (half adder):</strong> una puerta XOR (da el bit de suma) + una puerta AND
+    (da el acarreo). Dos puertas, y ya saben sumar 1+1.
+  </aside>
+
+  <h2>El sumador completo y la cadena de acarreos</h2>
+  <p>
+    Para sumar números de varios bits hace falta algo más: cada columna debe aceptar también <em>el acarreo que llega de la columna anterior</em>, igual que cuando sumas a mano y te "llevas
+    una". El circuito que suma tres bits (A, B y acarreo entrante) se llama <strong>sumador completo</strong> y se construye con dos medios sumadores y una puerta OR: 5
+    puertas en total.
+  </p>
+  <p>
+    Encadena un sumador completo por cada bit —el acarreo de salida de cada uno alimenta al
+    siguiente— y tienes un <strong>sumador de propagación de acarreo</strong> (<em>ripple-carry adder</em>): una máquina de sumar de verdad, hecha solo de transistores.
+  </p>
+
+  <div class="demo" id="demo-adder">
+    <h3>➕ Pruébalo: sumador de 4 bits</h3>
+    <p class="demo-hint">
+      Activa los bits de A y B (el bit más a la izquierda vale 8) y mira la suma propagarse.
+    </p>
+    <div class="demo-row">
+      <span class="demo-label">A = <strong id="dec-a">0</strong></span>
+      <button class="bit a-bit" data-w="8" aria-pressed="false">0</button>
+      <button class="bit a-bit" data-w="4" aria-pressed="false">0</button>
+      <button class="bit a-bit" data-w="2" aria-pressed="false">0</button>
+      <button class="bit a-bit" data-w="1" aria-pressed="false">0</button>
+    </div>
+    <div class="demo-row">
+      <span class="demo-label">B = <strong id="dec-b">0</strong></span>
+      <button class="bit b-bit" data-w="8" aria-pressed="false">0</button>
+      <button class="bit b-bit" data-w="4" aria-pressed="false">0</button>
+      <button class="bit b-bit" data-w="2" aria-pressed="false">0</button>
+      <button class="bit b-bit" data-w="1" aria-pressed="false">0</button>
+    </div>
+    <div class="demo-row">
+      <span class="demo-label">Acarreos:</span>
+      <span class="readout tracking-[0.35em]" id="carries">0000</span>
+    </div>
+    <div class="demo-row">
+      <span class="demo-label">A + B =</span>
+      <span class="readout tracking-[0.35em]" id="sum-bin">00000</span>
+      <span class="readout">= <strong id="sum-dec">0</strong> en decimal</span>
+    </div>
+    <p class="demo-hint mt-3" id="overflow-msg"></p>
+  </div>
+
+  <h2>Restar sin saber restar: complemento a dos</h2>
+  <p>
+    ¿Y los números negativos? Aquí la ingeniería hace una jugada maestra. En el convenio de <strong>complemento a dos</strong>, para negar un número se invierten todos sus bits (¡puertas
+    NOT!) y se suma 1. Con 4 bits, <code>-3</code> se escribe <code>1101</code>. Lo asombroso: con
+    esta representación, <strong>restar es simplemente sumar el negativo</strong>. El mismo circuito
+    sumador que acabas de usar hace también todas las restas. No hay un "circuito de restar" en tu
+    ordenador: no hace falta.
+  </p>
+
+  <h2>La ALU: una caja de herramientas con selector</h2>
+  <p>
+    Repite la idea con otras operaciones —AND bit a bit, OR bit a bit, desplazamientos,
+    comparaciones— y empaqueta todos esos circuitos juntos con un <em>selector</em> que decide cuál
+    de las salidas usar. Ese bloque se llama <strong>ALU</strong> (Unidad Aritmético-Lógica) y es,
+    literalmente, la calculadora interna del procesador: le entran dos números y un código de
+    operación, y sale el resultado. En 1971, la ALU del Intel 4004 —el primer microprocesador—
+    formaba parte de un chip con solo 2.300 transistores.
+  </p>
+
+  <aside class="note">
+    <strong>Resumen del capítulo:</strong> el binario escribe números con voltajes; XOR y AND forman
+    el medio sumador; con acarreo, el sumador completo; en cadena, un sumador real. El complemento a
+    dos regala la resta, y la ALU reúne todas las operaciones bajo un selector. Los circuitos ya
+    calculan… pero lo olvidan todo al instante. Toca darles memoria.
+  </aside>
+</ChapterLayout>
+
+<script>
+  const aBits = [...document.querySelectorAll<HTMLButtonElement>('.a-bit')];
+  const bBits = [...document.querySelectorAll<HTMLButtonElement>('.b-bit')];
+
+  function value(bits: HTMLButtonElement[]) {
+    return bits.reduce(
+      (acc, btn) => acc + (btn.getAttribute('aria-pressed') === 'true' ? +btn.dataset.w! : 0),
+      0
+    );
+  }
+
+  function update() {
+    const a = value(aBits), b = value(bBits);
+    document.getElementById('dec-a')!.textContent = String(a);
+    document.getElementById('dec-b')!.textContent = String(b);
+
+    // simular el ripple-carry bit a bit, como el hardware real
+    let carry = 0;
+    const sumBits: number[] = [], carryBits: number[] = [];
+    for (let i = 0; i < 4; i++) {
+      const ai = (a >> i) & 1, bi = (b >> i) & 1;
+      const s = ai ^ bi ^ carry;                    // suma: XOR
+      carry = (ai & bi) | (carry & (ai ^ bi));      // acarreo: AND/OR
+      sumBits.unshift(s);
+      carryBits.unshift(carry);
+    }
+    document.getElementById('carries')!.textContent = carryBits.join('');
+    document.getElementById('sum-bin')!.textContent = carry + sumBits.join('');
+    document.getElementById('sum-dec')!.textContent = String(a + b);
+    document.getElementById('overflow-msg')!.textContent = carry
+      ? '💡 El quinto bit es el acarreo final: la suma no cabe en 4 bits. Esto es un desbordamiento (overflow).'
+      : '';
+  }
+
+  [...aBits, ...bBits].forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const on = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(on));
+      btn.textContent = on ? '1' : '0';
+      update();
+    })
+  );
+
+  update();
+</script>

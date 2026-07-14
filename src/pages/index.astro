@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Card from '../components/Card.astro';
+---
+
+<BaseLayout
+  title="Fundamentos de Computación — Del transistor a la CPU"
+  description="Sitio educativo de Ciencias de la Computación: entiende cómo un puñado de transistores se convierte en puertas lógicas, operaciones y, finalmente, una CPU."
+>
+  <main>
+    <div class="px-5 pb-12 pt-18 text-center">
+      <div class="mx-auto max-w-[920px]">
+        <h1 class="mb-4 text-[clamp(2rem,5vw,3.1rem)] font-extrabold leading-tight tracking-tight">
+          Del <span class="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">transistor</span>{' '}
+          a la <span class="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">CPU</span>
+        </h1>
+        <p class="mx-auto mb-8 max-w-[640px] text-lg text-soft">
+          Un viaje de abajo hacia arriba por las Ciencias de la Computación: cómo un simple interruptor
+          de silicio se convierte en puertas lógicas, las puertas en operaciones, y las operaciones en
+          el procesador que ejecuta todo lo que ves en pantalla.
+        </p>
+        <a
+          class="inline-block rounded-full bg-accent px-6 py-3 font-semibold text-white shadow-lg shadow-accent/25 transition-transform hover:-translate-y-0.5"
+          href="/capitulos/01-el-transistor"
+        >
+          Empezar el viaje →
+        </a>
+      </div>
+    </div>
+
+    <section id="curso" class="py-10">
+      <div class="mx-auto max-w-[920px] px-5">
+        <h2 class="mb-1 text-2xl font-bold tracking-tight">El curso</h2>
+        <p class="mb-7 text-soft">
+          Cinco capítulos, cada uno construido sobre el anterior. Sin magia: cada capa se explica solo
+          con las piezas de la capa inferior.
+        </p>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card href="/capitulos/01-el-transistor" num="01" title="El transistor">
+            El interruptor sin partes móviles que lo cambió todo: silicio, dopaje y el MOSFET.
+          </Card>
+          <Card href="/capitulos/02-puertas-logicas" num="02" title="Puertas lógicas">
+            Combinando interruptores nacen NOT, AND, OR… y la puerta universal: NAND.
+          </Card>
+          <Card href="/capitulos/03-del-bit-a-la-suma" num="03" title="Del bit a la suma">
+            Binario, medio sumador, sumador completo y la ALU: circuitos que hacen matemáticas.
+          </Card>
+          <Card href="/capitulos/04-memoria" num="04" title="Memoria">
+            Realimentación, latches y flip-flops: cómo se enseña a un circuito a recordar.
+          </Card>
+          <Card href="/capitulos/05-la-cpu" num="05" title="La CPU">
+            Registros, unidad de control y el ciclo fetch–decode–execute: todo encaja.
+          </Card>
+        </div>
+      </div>
+    </section>
+
+    <section id="proyectos" class="py-10">
+      <div class="mx-auto max-w-[920px] px-5">
+        <h2 class="mb-1 text-2xl font-bold tracking-tight">Proyectos educativos</h2>
+        <p class="mb-7 text-soft">Herramientas interactivas que he construido para aprender haciendo.</p>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <Card
+            href="https://boolean-synth.vercel.app/"
+            num="⊕"
+            title="Boolean Synth"
+            external
+            ext="boolean-synth.vercel.app"
+          >
+            Diseñador interactivo de circuitos lógicos. Construye circuitos con puertas AND, OR, NOT…
+            y observa el resultado en tiempo real. El compañero perfecto del capítulo 2.
+          </Card>
+          <Card
+            href="https://v0-abacus-learning-system.vercel.app/"
+            num="算"
+            title="Soroban Learning System"
+            external
+            ext="v0-abacus-learning-system.vercel.app"
+          >
+            Aprende a calcular con el ábaco japonés: un tablero interactivo con modos de exploración
+            y entrenamiento. Antes del silicio, así computaba la humanidad.
+          </Card>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

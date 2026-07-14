@@ -1,0 +1,166 @@
+---
+import ChapterLayout from '../../layouts/ChapterLayout.astro';
+---
+
+<ChapterLayout
+  title="01 · El transistor — Fundamentos de Computación"
+  description="Qué es un transistor y cómo funciona: semiconductores, dopaje y el MOSFET como interruptor controlado por voltaje."
+  kicker="Capítulo 01"
+  heading="El transistor: el interruptor que lo cambió todo"
+  next={{ href: '/capitulos/02-puertas-logicas', label: 'Capítulo 02 · Puertas lógicas' }}
+>
+  <p class="text-lg text-soft">
+    Toda la informática moderna —tu móvil, internet, la inteligencia artificial— descansa sobre una
+    única idea física: <strong>un interruptor que se enciende y apaga con electricidad, sin que nada
+    se mueva</strong>. Ese interruptor es el transistor, y en este capítulo vamos a entender
+    exactamente cómo funciona.
+  </p>
+
+  <h2>Empecemos por la pregunta correcta</h2>
+  <p>
+    Un ordenador no "piensa": conmuta. Todo lo que hace se reduce a abrir y cerrar interruptores muy
+    deprisa. Los primeros ordenadores usaban <em>relés</em> (interruptores mecánicos) y <em>válvulas de vacío</em>: funcionaban, pero eran lentos, enormes, calientes y se estropeaban
+    constantemente. La pregunta que la física respondió en 1947 fue: <strong>¿puede un trozo de
+    materia sólida, sin partes móviles, comportarse como un interruptor?</strong>
+  </p>
+  <p>La respuesta está en un material muy especial: el <strong>semiconductor</strong>.</p>
+
+  <h2>El silicio: ni conductor ni aislante</h2>
+  <p>
+    Los metales conducen la electricidad porque tienen electrones libres que se mueven con facilidad.
+    Los aislantes (vidrio, plástico) no tienen ninguno. El <strong>silicio</strong> está justo en
+    medio: en estado puro apenas conduce, porque sus átomos forman una red cristalina perfecta donde
+    cada uno de sus 4 electrones de valencia está ocupado enlazándose con sus vecinos. No hay
+    electrones "sueltos" para transportar corriente.
+  </p>
+  <p>
+    Y aquí viene el truco que hace posible toda la electrónica: podemos <strong>contaminar el silicio a propósito</strong>. Se llama <strong>dopaje</strong>:
+  </p>
+  <ul>
+    <li>
+      <strong>Tipo N</strong> — añadimos átomos de fósforo, que tienen 5 electrones de valencia.
+      Cuatro se enlazan con el silicio y <em>uno sobra</em>: queda un electrón libre, cargado
+      negativamente, listo para moverse.
+    </li>
+    <li>
+      <strong>Tipo P</strong> — añadimos átomos de boro, que solo tienen 3 electrones. Falta uno para
+      completar los enlaces, y ese vacío se llama <strong>hueco</strong>. Los huecos se comportan como
+      cargas positivas móviles: cuando un electrón vecino salta a ocupar el hueco, el hueco "se
+      mueve" en dirección contraria.
+    </li>
+  </ul>
+  <aside class="note">
+    <strong>Idea clave:</strong> dopar el silicio nos da dos "sabores" de material —N con electrones
+    de sobra, P con huecos de sobra— y con solo juntar y apilar estos dos sabores podemos esculpir el
+    comportamiento de la corriente.
+  </aside>
+
+  <h2>El MOSFET: un interruptor controlado por voltaje</h2>
+  <p>
+    El transistor que domina el mundo (hay miles de millones en el chip de tu móvil) es el <strong>MOSFET</strong> (transistor de efecto de campo metal-óxido-semiconductor). Tiene tres
+    terminales:
+  </p>
+  <ul>
+    <li>
+      <strong>Fuente (Source)</strong> y <strong>Drenador (Drain)</strong>: dos islas de silicio tipo
+      N, separadas por una región tipo P. La corriente querría cruzar de una a otra… pero la región P
+      se lo impide.
+    </li>
+    <li>
+      <strong>Puerta (Gate)</strong>: una placa metálica situada <em>encima</em> de esa región P,
+      separada por una capa finísima de óxido aislante. No toca el silicio: solo lo observa desde
+      arriba.
+    </li>
+  </ul>
+  <p>
+    ¿Y cómo abre el paso la puerta si está aislada? Por <strong>efecto de campo</strong>: al aplicar
+    un voltaje positivo a la puerta, su campo eléctrico <em>atrae</em> a los electrones de la región
+    P hacia la superficie. Se acumulan justo bajo el óxido y forman un <strong>canal</strong> conductor que conecta fuente y drenador. Quita el voltaje, y el canal se desvanece.
+  </p>
+
+  <div class="demo" id="demo-mosfet">
+    <h3>🔬 Pruébalo: un MOSFET en tus manos</h3>
+    <p class="demo-hint">
+      Pulsa el botón de la puerta (Gate) y observa cómo se forma el canal y circula la corriente.
+    </p>
+    <figure>
+      <svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" aria-label="Diagrama interactivo de un MOSFET">
+        <rect x="60" y="120" width="440" height="110" rx="8" fill="#f4c9c9" opacity="0.55"></rect>
+        <text x="280" y="215" text-anchor="middle" font-size="14" fill="#a15555">sustrato tipo P</text>
+        <rect x="80" y="120" width="90" height="55" rx="6" fill="#b9d7f5"></rect>
+        <text x="125" y="152" text-anchor="middle" font-size="13" fill="#3a6ea8">N</text>
+        <rect x="390" y="120" width="90" height="55" rx="6" fill="#b9d7f5"></rect>
+        <text x="435" y="152" text-anchor="middle" font-size="13" fill="#3a6ea8">N</text>
+        <rect x="180" y="108" width="200" height="12" fill="#d9d9d9"></rect>
+        <rect x="200" y="80" width="160" height="26" rx="5" id="gate-plate" fill="#9aa5b5"></rect>
+        <text x="280" y="98" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">GATE</text>
+        <rect x="170" y="120" width="220" height="16" rx="6" id="channel" fill="#4f8fe0" opacity="0"></rect>
+        <text x="125" y="110" text-anchor="middle" font-size="13" fill="currentColor">Fuente</text>
+        <text x="435" y="110" text-anchor="middle" font-size="13" fill="currentColor">Drenador</text>
+        <g id="electrons" opacity="0">
+          <circle r="5" fill="#2563eb"><animate attributeName="cx" from="130" to="430" dur="1.2s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" repeatCount="indefinite"></animate></circle>
+          <circle r="5" fill="#2563eb"><animate attributeName="cx" from="130" to="430" dur="1.2s" begin="0.4s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" begin="0.4s" repeatCount="indefinite"></animate></circle>
+          <circle r="5" fill="#2563eb"><animate attributeName="cx" from="130" to="430" dur="1.2s" begin="0.8s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" begin="0.8s" repeatCount="indefinite"></animate></circle>
+        </g>
+        <circle cx="520" cy="60" r="18" id="bulb" fill="#d0d5de" stroke="#9aa5b5" stroke-width="2"></circle>
+        <text x="520" y="100" text-anchor="middle" font-size="12" fill="currentColor">salida</text>
+        <path d="M 435 120 L 435 60 L 502 60" fill="none" stroke="#9aa5b5" stroke-width="2.5"></path>
+      </svg>
+    </figure>
+    <div class="demo-row">
+      <span class="demo-label">Voltaje en la puerta:</span>
+      <button class="bit" id="gate-btn" aria-pressed="false">0</button>
+      <span class="readout" id="mosfet-state"><span class="off">canal cerrado — no circula corriente</span></span>
+    </div>
+  </div>
+
+  <h2>Por qué esto lo cambia todo</h2>
+  <p>
+    Fíjate en lo que acabamos de conseguir: <strong>una señal eléctrica (la puerta) controla otra
+    señal eléctrica (la corriente entre fuente y drenador)</strong>. Eso significa que la salida de
+    un transistor puede conectarse a la puerta de otro. Los interruptores pueden controlarse entre
+    sí, en cadena, formando circuitos que toman decisiones. Además:
+  </p>
+  <ul>
+    <li><strong>Es rapidísimo.</strong> Sin piezas móviles, un MOSFET moderno conmuta miles de millones de veces por segundo.</li>
+    <li><strong>Es diminuto.</strong> Los transistores actuales miden unos pocos nanómetros: en un chip del tamaño de una uña caben más de 10.000 millones.</li>
+    <li><strong>Casi no gasta.</strong> La puerta está aislada por el óxido: mantenerla cargada apenas consume energía.</li>
+  </ul>
+
+  <h2>El bit: una convención sobre voltajes</h2>
+  <p>
+    Ahora podemos definir la unidad de información más famosa del mundo. Si un cable está a voltaje
+    alto decimos que vale <code>1</code>; si está a voltaje bajo (tierra), vale <code>0</code>. Eso
+    es un <strong>bit</strong>: no es un objeto, es un <em>acuerdo</em> sobre cómo interpretar un
+    voltaje. El transistor es el dispositivo que nos permite crear, copiar y transformar bits.
+  </p>
+
+  <aside class="note">
+    <strong>Resumen del capítulo:</strong> el silicio dopado nos da materiales N y P; apilándolos
+    construimos el MOSFET, un interruptor donde un voltaje en la puerta crea (o destruye) un canal
+    conductor. Es pequeño, rápido, barato y puede controlar a otros transistores. En el próximo
+    capítulo conectaremos unos cuantos y les enseñaremos lógica.
+  </aside>
+</ChapterLayout>
+
+<script>
+  const gateBtn = document.getElementById('gate-btn')!;
+  const channel = document.getElementById('channel')!;
+  const electrons = document.getElementById('electrons')!;
+  const bulb = document.getElementById('bulb')!;
+  const gatePlate = document.getElementById('gate-plate')!;
+  const state = document.getElementById('mosfet-state')!;
+
+  gateBtn.addEventListener('click', () => {
+    const on = gateBtn.getAttribute('aria-pressed') !== 'true';
+    gateBtn.setAttribute('aria-pressed', String(on));
+    gateBtn.textContent = on ? '1' : '0';
+    channel.style.opacity = on ? '0.85' : '0';
+    electrons.style.opacity = on ? '1' : '0';
+    bulb.setAttribute('fill', on ? '#fbbf24' : '#d0d5de');
+    gatePlate.setAttribute('fill', on ? '#2563eb' : '#9aa5b5');
+    state.innerHTML = on
+      ? '<span class="on">canal formado — ¡circula corriente!</span>'
+      : '<span class="off">canal cerrado — no circula corriente</span>';
+  });
+</script>

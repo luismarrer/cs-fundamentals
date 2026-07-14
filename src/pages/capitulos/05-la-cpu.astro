@@ -1,0 +1,179 @@
+---
+import ChapterLayout from '../../layouts/ChapterLayout.astro';
+---
+
+<ChapterLayout
+  title="05 · La CPU — Fundamentos de Computación"
+  description="Registros, ALU, unidad de control y el ciclo fetch-decode-execute: cómo todas las piezas forman un procesador."
+  kicker="Capítulo 05"
+  heading="La CPU: donde todo encaja"
+  prev={{ href: '/capitulos/04-memoria', label: 'Capítulo 04 · Memoria' }}
+  next={{ href: '/#curso', label: 'Volver al índice' }}
+>
+  <p class="text-lg text-soft">
+    Tenemos puertas que deciden, una ALU que calcula y registros que recuerdan. Lo único que falta es
+    un director de orquesta que les diga <em>qué hacer y cuándo</em>. Ese director es la <strong>unidad de control</strong>, y el conjunto completo es la CPU: la idea de máquina
+    programable hecha silicio.
+  </p>
+
+  <h2>La gran idea: el programa también es datos</h2>
+  <p>
+    Hasta los años 40, "programar" una máquina era recablearla. La idea que funda la informática
+    moderna —la <strong>arquitectura de von Neumann</strong>— es que las instrucciones se pueden
+    codificar como números y guardarse <em>en la misma memoria que los datos</em>. Cambiar de
+    programa ya no es tocar un cable: es escribir otros números en la memoria.
+  </p>
+  <p>
+    Cada CPU define su <strong>ISA</strong> (arquitectura del conjunto de instrucciones): el catálogo
+    de operaciones que entiende y cómo se codifican en bits. Es el contrato entre el hardware y el
+    software: por eso un mismo programa compilado para x86 corre en CPUs de Intel y de AMD.
+  </p>
+
+  <h2>Las piezas del procesador</h2>
+  <ul>
+    <li><strong>PC (contador de programa):</strong> un registro que guarda la dirección de la siguiente instrucción.</li>
+    <li><strong>IR (registro de instrucción):</strong> guarda la instrucción que se está ejecutando ahora mismo.</li>
+    <li><strong>Registros de datos / acumulador:</strong> la memoria de trabajo inmediata (capítulo 4).</li>
+    <li><strong>ALU:</strong> la calculadora (capítulo 3).</li>
+    <li><strong>Unidad de control:</strong> un circuito de puertas lógicas (capítulo 2) que decodifica la instrucción y activa las señales adecuadas: "ALU, suma", "registro, captura", "memoria, lee".</li>
+    <li><strong>El reloj</strong> marca el compás de todo (capítulo 4).</li>
+  </ul>
+
+  <h2>El latido: fetch → decode → execute</h2>
+  <p>
+    Todo lo que ha hecho cualquier ordenador de la historia se reduce a este ciclo, repetido miles de
+    millones de veces por segundo:
+  </p>
+  <ul>
+    <li><strong>Fetch:</strong> trae de memoria la instrucción que señala el PC.</li>
+    <li><strong>Decode:</strong> la unidad de control interpreta sus bits: ¿qué operación es? ¿con qué operando?</li>
+    <li><strong>Execute:</strong> se activan las señales, la ALU o la memoria hacen su trabajo, y el PC avanza a la siguiente instrucción.</li>
+  </ul>
+
+  <div class="demo" id="demo-cpu">
+    <h3>🖥️ Pruébalo: una CPU de juguete</h3>
+    <p class="demo-hint">
+      Este programa calcula <code>7 + 35</code> y guarda el resultado en la celda 7. Pulsa <em>Paso</em> para avanzar fase a fase y ver el ciclo fetch–decode–execute en acción.
+    </p>
+    <div class="my-4 grid gap-5 sm:grid-cols-2">
+      <div class="cpu-box">
+        <h4>Registros</h4>
+        <div class="reg-line"><span>PC (contador de programa)</span><span class="reg-val" id="r-pc">0</span></div>
+        <div class="reg-line"><span>IR (instrucción actual)</span><span class="reg-val" id="r-ir">—</span></div>
+        <div class="reg-line"><span>ACC (acumulador)</span><span class="reg-val" id="r-acc">0</span></div>
+        <div class="reg-line"><span>Fase</span><span class="reg-val" id="r-phase">listo</span></div>
+      </div>
+      <div class="cpu-box">
+        <h4>Memoria (programa y datos juntos)</h4>
+        <div id="mem-view"></div>
+      </div>
+    </div>
+    <div class="demo-row">
+      <button class="action action-primary" id="btn-step">Paso ▸</button>
+      <button class="action" id="btn-run">Ejecutar todo ▸▸</button>
+      <button class="action" id="btn-cpu-reset">Reiniciar ↺</button>
+    </div>
+    <div class="cpu-log" id="cpu-log">Pulsa «Paso» para empezar. La CPU hará fetch de la celda 0.</div>
+  </div>
+
+  <h2>Subiendo por la escalera de abstracciones</h2>
+  <p>
+    Escribir números de máquina a mano es agotador, así que construimos escalones encima: el <strong>ensamblador</strong> pone nombres a las instrucciones (<code>ADD 6</code> en vez de <code>26</code>); los <strong>compiladores</strong> traducen lenguajes de alto nivel a esas
+    instrucciones; los <strong>sistemas operativos</strong> reparten la CPU entre programas. Cada
+    capa se apoya en la anterior, y ninguna necesita magia: al fondo de todo siguen estando los
+    transistores del capítulo 1, conmutando.
+  </p>
+  <p>
+    Las CPUs reales añaden trucos espectaculares —pipeline (varias instrucciones en vuelo a la vez),
+    predicción de saltos, múltiples núcleos, cachés de tres niveles— pero todos son optimizaciones
+    del mismo ciclo que acabas de ejecutar a mano.
+  </p>
+
+  <aside class="note">
+    <strong>El viaje completo:</strong> dopamos silicio y obtuvimos un interruptor controlado por
+    voltaje (01). Los combinamos en puertas que materializan la lógica de Boole (02). Con XOR y AND,
+    la lógica se volvió aritmética y nació la ALU (03). La realimentación dio memoria y el reloj puso
+    orden (04). Y la unidad de control lo dirige todo en un ciclo eterno de fetch–decode–execute
+    (05). Eso —nada más y nada menos— es un ordenador.
+  </aside>
+</ChapterLayout>
+
+<script>
+  // Mini CPU de acumulador: LOAD addr, ADD addr, STORE addr, HALT
+  interface Cell {
+    text: string;
+    op: string | null;
+    arg: number | null;
+    data?: number;
+  }
+
+  const PROGRAM: Cell[] = [
+    { text: 'LOAD 5',  op: 'LOAD',  arg: 5 },
+    { text: 'ADD 6',   op: 'ADD',   arg: 6 },
+    { text: 'STORE 7', op: 'STORE', arg: 7 },
+    { text: 'HALT',    op: 'HALT',  arg: null },
+    { text: '—',       op: null,    arg: null },
+    { text: '7',       op: null,    arg: null, data: 7 },
+    { text: '35',      op: null,    arg: null, data: 35 },
+    { text: '0',       op: null,    arg: null, data: 0 },
+  ];
+
+  let mem: Cell[], pc: number, acc: number, ir: Cell | null, phase: string, halted: boolean;
+
+  function reset() {
+    mem = PROGRAM.map((c) => ({ ...c }));
+    pc = 0; acc = 0; ir = null; phase = 'fetch'; halted = false;
+    render('Pulsa «Paso» para empezar. La CPU hará fetch de la celda 0.');
+  }
+
+  function render(logText: string, highlight: number = pc) {
+    document.getElementById('r-pc')!.textContent = String(pc);
+    document.getElementById('r-ir')!.textContent = ir ? ir.text : '—';
+    document.getElementById('r-acc')!.textContent = String(acc);
+    document.getElementById('r-phase')!.textContent = halted ? 'detenida' : phase;
+    const view = mem.map((c, i) =>
+      '<div class="mem-row' + (i === highlight ? ' current' : '') + '">' +
+      '<span class="addr">' + i + ':</span><span>' +
+      (c.data !== undefined ? c.data : c.text) + '</span></div>'
+    ).join('');
+    document.getElementById('mem-view')!.innerHTML = view;
+    document.getElementById('cpu-log')!.textContent = logText;
+  }
+
+  function step() {
+    if (halted) { render('La CPU está detenida (HALT). Pulsa «Reiniciar» para volver a empezar.'); return; }
+    if (phase === 'fetch') {
+      ir = mem[pc];
+      phase = 'decode';
+      render('FETCH — La CPU lee la celda ' + pc + ' de memoria y copia «' + ir.text + '» al registro IR.');
+    } else if (phase === 'decode') {
+      phase = 'execute';
+      const desc: Record<string, string> = {
+        LOAD: 'cargar en el acumulador el contenido de la celda ' + ir!.arg,
+        ADD: 'sumar (¡con la ALU!) el contenido de la celda ' + ir!.arg + ' al acumulador',
+        STORE: 'guardar el acumulador en la celda ' + ir!.arg,
+        HALT: 'detener la CPU',
+      };
+      render('DECODE — La unidad de control interpreta «' + ir!.text + '»: hay que ' + desc[ir!.op!] + '.', ir!.arg ?? pc);
+    } else {
+      let logText = '';
+      const arg = ir!.arg;
+      if (ir!.op === 'LOAD') { acc = mem[arg!].data!; logText = 'EXECUTE — ACC ← M[' + arg + ']. El acumulador ahora vale ' + acc + '.'; }
+      else if (ir!.op === 'ADD') { acc = acc + mem[arg!].data!; logText = 'EXECUTE — ACC ← ACC + M[' + arg + '] = ' + acc + '. La ALU del capítulo 3 acaba de sumar.'; }
+      else if (ir!.op === 'STORE') { mem[arg!].data = acc; mem[arg!].text = String(acc); logText = 'EXECUTE — M[' + arg + '] ← ' + acc + '. El resultado ya está en memoria.'; }
+      else if (ir!.op === 'HALT') { halted = true; render('EXECUTE — HALT. Programa terminado: la celda 7 contiene ' + mem[7].data + '. Eso es computar.'); return; }
+      pc = pc + 1;
+      phase = 'fetch';
+      render(logText + ' El PC avanza a ' + pc + '.', arg ?? pc);
+    }
+  }
+
+  document.getElementById('btn-step')!.addEventListener('click', step);
+  document.getElementById('btn-cpu-reset')!.addEventListener('click', reset);
+  document.getElementById('btn-run')!.addEventListener('click', () => {
+    let guard = 0;
+    while (!halted && guard++ < 100) step();
+  });
+
+  reset();
+</script>

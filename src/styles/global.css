@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* Tokens crudos: cambian con el tema del sistema */
+:root {
+  --bg: #f7f8fb;
+  --bg-elev: #ffffff;
+  --text: #1c2333;
+  --text-soft: #4b5568;
+  --border: #dfe3ec;
+  --accent: #2563eb;
+  --accent-soft: #dbe7ff;
+  --accent-2: #7c3aed;
+  --ok: #16a34a;
+  --off: #94a3b8;
+  --code-bg: #eef1f7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1117;
+    --bg-elev: #171c26;
+    --text: #e6e9f0;
+    --text-soft: #a3adc2;
+    --border: #2a3242;
+    --accent: #60a5fa;
+    --accent-soft: #1b2a4a;
+    --accent-2: #a78bfa;
+    --ok: #4ade80;
+    --off: #55617a;
+    --code-bg: #1e2430;
+  }
+}
+
+/* Tokens semánticos de Tailwind: bg-bg, bg-elev, text-ink, text-soft,
+   border-line, *-accent, *-accent-soft, text-ok, text-off, bg-code */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-ink: var(--text);
+  --color-soft: var(--text-soft);
+  --color-line: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-2: var(--accent-2);
+  --color-ok: var(--ok);
+  --color-off: var(--off);
+  --color-code: var(--code-bg);
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Componentes reutilizados entre capítulos o generados desde JS
+   (los estilos scoped de Astro no alcanzan al HTML creado en runtime) */
+@layer components {
+  /* prosa de capítulos */
+  .chapter h2 { @apply mb-3 mt-10 text-2xl font-bold tracking-tight; }
+  .chapter p { @apply my-4; }
+  .chapter ul { @apply my-4 list-disc space-y-2 pl-6; }
+  .chapter code { @apply rounded-md bg-code px-1.5 py-0.5 font-mono text-[0.92em]; }
+  .chapter figure { @apply my-7 text-center; }
+  .chapter figure svg { @apply mx-auto h-auto max-w-full; }
+  .chapter figcaption { @apply mt-2 text-sm text-soft; }
+  .chapter a { @apply text-accent; }
+
+  .note { @apply my-6 rounded-r-2xl border-l-4 border-accent bg-accent-soft px-5 py-4 text-[0.95rem]; }
+  .note strong { @apply text-accent; }
+
+  /* tablas de verdad */
+  .truth { @apply mx-auto border-collapse font-mono text-[0.95rem]; }
+  .truth th { @apply border border-line bg-code px-4 py-2 font-sans; }
+  .truth td { @apply border border-line px-4 py-2 text-center; }
+  .truth td.one { @apply font-bold text-ok; }
+  .truth td.zero { @apply text-off; }
+
+  /* paneles de demo */
+  .demo { @apply my-8 rounded-2xl border border-line bg-elev p-6 shadow-lg shadow-black/5; }
+  .demo h3 { @apply mb-1 mt-0 text-lg font-semibold; }
+  .demo-hint { @apply mb-4 mt-0 text-sm text-soft; }
+  .demo-hint a { @apply text-accent underline; }
+  .demo-row { @apply my-2 flex flex-wrap items-center gap-3; }
+  .demo-label { @apply min-w-[6.5rem] text-sm text-soft; }
+
+  .bit { @apply h-10 w-10 cursor-pointer rounded-[10px] border-2 border-line bg-code font-mono text-lg font-bold text-off transition-all; }
+  .bit[aria-pressed="true"] { @apply border-accent bg-accent text-white; }
+
+  .action { @apply cursor-pointer rounded-[10px] border border-line bg-elev px-4 py-2 text-sm font-semibold transition-all hover:border-accent hover:text-accent; }
+  .action-primary { @apply border-accent bg-accent text-white hover:bg-accent/85 hover:text-white; }
+
+  .readout { @apply rounded-lg bg-code px-3 py-1.5 font-mono; }
+  .readout .on, .on { @apply font-bold text-ok; }
+  .readout .off, .off { @apply text-off; }
+
+  /* simulador de CPU (capítulo 05) */
+  .cpu-box { @apply rounded-xl border border-line px-4 py-3; }
+  .cpu-box h4 { @apply mb-2 mt-0 text-xs font-semibold uppercase tracking-wider text-soft; }
+  .reg-line { @apply flex justify-between py-1 font-mono text-[0.95rem]; }
+  .reg-val { @apply font-bold text-accent; }
+  .mem-row { @apply flex gap-3 rounded-md px-2 py-0.5 font-mono text-sm; }
+  .mem-row .addr { @apply min-w-[1.6rem] text-soft; }
+  .mem-row.current { @apply bg-accent-soft outline outline-1 outline-accent; }
+  .cpu-log { @apply mt-4 min-h-[2.6rem] rounded-lg bg-code px-4 py-3 font-mono text-sm; }
+}

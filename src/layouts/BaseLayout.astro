@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+    />
+  </head>
+  <body class="bg-bg font-sans leading-relaxed text-ink antialiased">
+    <header class="sticky top-0 z-10 border-b border-line bg-bg/80 backdrop-blur-md">
+      <div class="mx-auto flex max-w-[920px] items-center justify-between gap-4 px-5 py-3">
+        <a class="whitespace-nowrap font-bold tracking-tight" href="/">
+          <span class="text-accent">⚡</span> Fundamentos de Computación
+        </a>
+        <nav class="flex flex-wrap gap-4 text-sm">
+          <a class="text-soft transition-colors hover:text-accent" href="/#curso">El curso</a>
+          <a class="text-soft transition-colors hover:text-accent" href="/#proyectos">Proyectos</a>
+        </nav>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class="mt-12 border-t border-line py-9 text-center text-sm text-soft">
+      <div class="mx-auto max-w-[920px] px-5">
+        Hecho con curiosidad por <a class="text-accent" href="https://github.com/luismarrer" target="_blank" rel="noopener">Luis Marrero</a> · Fundamentos de Computación
+      </div>
+    </footer>
+  </body>
+</html>
