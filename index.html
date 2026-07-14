@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundamentos de Computación — Del transistor a la CPU</title>
+  <meta name="description" content="Sitio educativo de Ciencias de la Computación: entiende cómo un puñado de transistores se convierte en puertas lógicas, operaciones y, finalmente, una CPU.">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html"><span class="spark">⚡</span> Fundamentos de Computación</a>
+    <nav class="site-nav">
+      <a href="#curso">El curso</a>
+      <a href="#proyectos">Proyectos</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <div class="hero">
+    <div class="container">
+      <h1>Del <span class="grad">transistor</span> a la <span class="grad">CPU</span></h1>
+      <p class="lead">
+        Un viaje de abajo hacia arriba por las Ciencias de la Computación:
+        cómo un simple interruptor de silicio se convierte en puertas lógicas,
+        las puertas en operaciones, y las operaciones en el procesador que
+        ejecuta todo lo que ves en pantalla.
+      </p>
+      <a class="cta" href="capitulos/01-el-transistor.html">Empezar el viaje →</a>
+    </div>
+  </div>
+
+  <section id="curso">
+    <div class="container">
+      <h2>El curso</h2>
+      <p class="section-sub">
+        Cinco capítulos, cada uno construido sobre el anterior. Sin magia:
+        cada capa se explica solo con las piezas de la capa inferior.
+      </p>
+      <div class="grid">
+        <a class="card" href="capitulos/01-el-transistor.html">
+          <span class="num">01</span>
+          <h3>El transistor</h3>
+          <p>El interruptor sin partes móviles que lo cambió todo: silicio, dopaje y el MOSFET.</p>
+        </a>
+        <a class="card" href="capitulos/02-puertas-logicas.html">
+          <span class="num">02</span>
+          <h3>Puertas lógicas</h3>
+          <p>Combinando interruptores nacen NOT, AND, OR… y la puerta universal: NAND.</p>
+        </a>
+        <a class="card" href="capitulos/03-del-bit-a-la-suma.html">
+          <span class="num">03</span>
+          <h3>Del bit a la suma</h3>
+          <p>Binario, medio sumador, sumador completo y la ALU: circuitos que hacen matemáticas.</p>
+        </a>
+        <a class="card" href="capitulos/04-memoria.html">
+          <span class="num">04</span>
+          <h3>Memoria</h3>
+          <p>Realimentación, latches y flip-flops: cómo se enseña a un circuito a recordar.</p>
+        </a>
+        <a class="card" href="capitulos/05-la-cpu.html">
+          <span class="num">05</span>
+          <h3>La CPU</h3>
+          <p>Registros, unidad de control y el ciclo fetch–decode–execute: todo encaja.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyectos">
+    <div class="container">
+      <h2>Proyectos educativos</h2>
+      <p class="section-sub">
+        Herramientas interactivas que he construido para aprender haciendo.
+      </p>
+      <div class="grid">
+        <a class="card" href="https://boolean-synth.vercel.app/" target="_blank" rel="noopener">
+          <span class="num">⊕</span>
+          <h3>Boolean Synth</h3>
+          <p>
+            Diseñador interactivo de circuitos lógicos. Construye circuitos con
+            puertas AND, OR, NOT… y observa el resultado en tiempo real.
+            El compañero perfecto del capítulo 2.
+          </p>
+          <span class="ext">boolean-synth.vercel.app ↗</span>
+        </a>
+        <a class="card" href="https://v0-abacus-learning-system.vercel.app/" target="_blank" rel="noopener">
+          <span class="num">算</span>
+          <h3>Soroban Learning System</h3>
+          <p>
+            Aprende a calcular con el ábaco japonés: un tablero interactivo con
+            modos de exploración y entrenamiento. Antes del silicio, así
+            computaba la humanidad.
+          </p>
+          <span class="ext">v0-abacus-learning-system.vercel.app ↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    Hecho con curiosidad por <a href="https://github.com/luismarrer" target="_blank" rel="noopener">Luis Marrero</a>
+    · Fundamentos de Computación
+  </div>
+</footer>
+
+</body>
+</html>
