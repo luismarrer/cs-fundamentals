@@ -1,0 +1,248 @@
+---
+const weights = [8, 4, 2, 1];
+const stages = [0, 1, 2, 3];
+---
+
+<section class="carry-journey" aria-label="Recorrido del acarreo">
+  <p class="demo-hint">
+    Elige A y B. Empieza por el bit de valor 1, predice el acarreo y revela cada transformación.
+    Cambiar un bit reinicia el recorrido; los resultados pendientes se muestran con «?».
+  </p>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    {['a', 'b'].map((operand) => (
+      <fieldset class="m-0 min-w-0 border-0 p-0">
+        <legend class="mb-2 text-sm text-soft">
+          {operand.toUpperCase()} = <strong data-decimal={operand}>0</strong> en decimal
+        </legend>
+        <div class="flex gap-3">
+          {weights.map((weight) => (
+            <div class="flex flex-col items-center gap-1">
+              <span class="font-mono text-xs text-soft">{weight}</span>
+              <button type="button" class="bit" data-operand={operand} data-weight={weight}
+                aria-label={`${operand.toUpperCase()}: bit de valor ${weight}`} aria-pressed="false">0</button>
+            </div>
+          ))}
+        </div>
+      </fieldset>
+    ))}
+  </div>
+
+  <p class="text-sm text-soft">El acarreo viaja del bit menos significativo al más significativo: 1 → 2 → 4 → 8.</p>
+  <ol class="m-0 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-4" aria-label="Etapas de la suma">
+    {stages.map((index) => (
+      <li class="!m-0 !p-0">
+        <button type="button" class="carry-stage w-full rounded-lg border border-line bg-elev p-3 text-left"
+          data-stage={index} aria-controls="carry-detail" aria-current={index === 0 ? 'step' : undefined}
+          disabled={index !== 0}>
+          <span class="block font-mono text-sm font-bold">Bit {index} · valor {2 ** index}</span>
+          <span class="block text-xs text-soft" data-stage-state>{index === 0 ? 'Actual' : 'Pendiente'}</span>
+          <span class="mt-2 block font-mono text-xs" data-stage-output>S=? · C=?</span>
+        </button>
+      </li>
+    ))}
+  </ol>
+
+  <div id="carry-detail" class="mt-4 rounded-xl border border-line bg-elev p-4">
+    <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <h4 id="carry-title" class="m-0 font-bold" tabindex="-1">Bit 0 · valor 1</h4>
+      <span class="text-xs text-soft" id="carry-progress">0 de 4 etapas reveladas</span>
+    </div>
+    <div class="mt-3 grid gap-3 lg:grid-cols-[1fr_2fr_1fr]">
+      <div class="rounded-lg bg-code p-3">
+        <div class="mb-2 text-xs font-bold text-soft">1 · Entradas</div>
+        <div class="font-mono text-sm" id="carry-inputs">A=0 · B=0 · C=0</div>
+        <div class="mt-2 text-xs text-soft" id="carry-source">El primer bit recibe acarreo 0.</div>
+      </div>
+      <div class="rounded-lg bg-code p-3">
+        <div class="mb-2 text-xs font-bold text-soft">2 · Puertas lógicas →</div>
+        <div class="space-y-1 font-mono text-xs leading-relaxed">
+          <div data-gate="xor">X = A XOR B = ?</div>
+          <div data-gate="sum">S = X XOR C = ?</div>
+          <div data-gate="generated">G = A AND B = ?</div>
+          <div data-gate="propagated">P = X AND C = ?</div>
+          <div data-gate="outgoing">C salida = G OR P = ?</div>
+        </div>
+      </div>
+      <div class="rounded-lg bg-accent-soft p-3">
+        <div class="mb-2 text-xs font-bold text-accent">3 · Salidas</div>
+        <div class="font-mono text-sm" id="carry-outputs">Suma=? · Acarreo=?</div>
+        <div class="mt-2 text-xs text-soft" id="carry-destination">El acarreo alimentará el bit 1.</div>
+      </div>
+    </div>
+
+    <fieldset class="mt-4 min-w-0 border-0 p-0">
+      <legend class="mb-2 text-sm font-semibold">¿Qué acarreo saldrá de este bit?</legend>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" class="action" data-prediction="0" aria-pressed="false">Predigo 0</button>
+        <button type="button" class="action" data-prediction="1" aria-pressed="false">Predigo 1</button>
+        <button type="button" class="action action-primary" id="carry-reveal" disabled>Revelar este bit</button>
+      </div>
+    </fieldset>
+    <p id="carry-feedback" class="min-h-12 text-sm" role="status" aria-live="polite" aria-atomic="true">
+      Elige una predicción para revelar las puertas y las salidas.
+    </p>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" class="action" id="carry-previous" disabled>Bit anterior</button>
+      <button type="button" class="action" id="carry-next" disabled>Siguiente bit</button>
+      <button type="button" class="action" id="carry-restart">Reiniciar recorrido</button>
+      <button type="button" class="action" id="carry-clear">Poner A y B en cero</button>
+    </div>
+  </div>
+
+  <div class="mt-4 rounded-lg border border-line bg-code p-3" aria-live="polite" aria-atomic="true">
+    <div class="flex flex-wrap items-baseline gap-2 text-sm">
+      <span>Resultado (valores 16 · 8 · 4 · 2 · 1):</span>
+      <strong class="font-mono tracking-widest" id="sum-bin">?????</strong>
+      <span id="sum-dec">Decimal pendiente</span>
+    </div>
+    <p class="!mb-0 text-xs text-soft" id="carry-final">El quinto bit será el acarreo final; se revela al completar el bit 3.</p>
+  </div>
+  <noscript><p>Este recorrido necesita JavaScript para cambiar los bits y revelar sus resultados.</p></noscript>
+</section>
+
+<style>
+  .carry-stage[aria-current="step"] { border-color: var(--accent); background: var(--accent-soft); }
+  .carry-stage[data-revealed="true"] [data-stage-output] { color: var(--ok); }
+  .carry-journey button:disabled { cursor: default; opacity: 0.55; transform: none; }
+  .carry-journey [data-prediction][aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  #carry-title:focus { outline: 2px solid var(--accent); outline-offset: 4px; }
+</style>
+
+<script>
+  type StageResult = {
+    a: number; b: number; incoming: number; xor: number; generated: number;
+    propagated: number; sum: number; outgoing: number; prediction: number;
+  };
+
+  document.querySelectorAll<HTMLElement>('.carry-journey').forEach((root) => {
+    const get = <T extends HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
+    const operandButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-operand]')];
+    const stageButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-stage]')];
+    const predictionButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-prediction]')];
+    const reveal = get<HTMLButtonElement>('#carry-reveal');
+    const previous = get<HTMLButtonElement>('#carry-previous');
+    const next = get<HTMLButtonElement>('#carry-next');
+    const title = get<HTMLHeadingElement>('#carry-title');
+    const feedback = get<HTMLParagraphElement>('#carry-feedback');
+    let selected = 0;
+    let prediction: number | null = null;
+    let results: StageResult[] = [];
+
+    const operand = (name: string) => operandButtons.reduce((value, button) =>
+      value | (button.dataset.operand === name && button.getAttribute('aria-pressed') === 'true'
+        ? Number(button.dataset.weight) : 0), 0);
+
+    function render() {
+      const a = (operand('a') >> selected) & 1;
+      const b = (operand('b') >> selected) & 1;
+      const incoming = selected === 0 ? 0 : results[selected - 1].outgoing;
+      const result = results[selected];
+      get('[data-decimal="a"]').textContent = String(operand('a'));
+      get('[data-decimal="b"]').textContent = String(operand('b'));
+      title.textContent = `Bit ${selected} · valor ${2 ** selected}`;
+      get('#carry-progress').textContent = `${results.length} de 4 etapas reveladas`;
+      get('#carry-inputs').textContent = `A=${a} · B=${b} · C=${incoming}`;
+      get('#carry-source').textContent = selected === 0
+        ? 'El primer bit recibe acarreo 0.' : `Este acarreo llega del bit ${selected - 1}.`;
+      get('#carry-destination').textContent = selected === 3
+        ? 'El acarreo final ocupa el quinto bit (valor 16).' : `El acarreo alimentará el bit ${selected + 1}.`;
+
+      const gates = {
+        xor: result ? `X = ${a} XOR ${b} = ${result.xor}` : 'X = A XOR B = ?',
+        sum: result ? `S = ${result.xor} XOR ${incoming} = ${result.sum}` : 'S = X XOR C = ?',
+        generated: result ? `G = ${a} AND ${b} = ${result.generated}` : 'G = A AND B = ?',
+        propagated: result ? `P = ${result.xor} AND ${incoming} = ${result.propagated}` : 'P = X AND C = ?',
+        outgoing: result ? `C salida = ${result.generated} OR ${result.propagated} = ${result.outgoing}` : 'C salida = G OR P = ?',
+      };
+      Object.entries(gates).forEach(([gate, text]) => { get(`[data-gate="${gate}"]`).textContent = text; });
+      get('#carry-outputs').textContent = result ? `Suma=${result.sum} · Acarreo=${result.outgoing}` : 'Suma=? · Acarreo=?';
+
+      stageButtons.forEach((button, index) => {
+        const step = results[index];
+        button.disabled = index > results.length;
+        button.dataset.revealed = String(Boolean(step));
+        if (index === selected) button.setAttribute('aria-current', 'step');
+        else button.removeAttribute('aria-current');
+        button.querySelector('[data-stage-state]')!.textContent = index === selected
+          ? (step ? 'Actual · revelado' : 'Actual') : (step ? 'Revelado' : 'Pendiente');
+        button.querySelector('[data-stage-output]')!.textContent = step ? `S=${step.sum} · C=${step.outgoing}` : 'S=? · C=?';
+      });
+      predictionButtons.forEach((button) => {
+        button.disabled = Boolean(result);
+        button.setAttribute('aria-pressed', String(Number(button.dataset.prediction) === (result?.prediction ?? prediction)));
+      });
+      reveal.disabled = Boolean(result) || prediction === null;
+      previous.disabled = selected === 0;
+      next.disabled = selected === 3 || selected >= results.length;
+      feedback.textContent = result
+        ? `${result.prediction === result.outgoing ? 'Correcto.' : `Predijiste ${result.prediction}; el acarreo es ${result.outgoing}.`} `
+          + `A AND B da ${result.generated}; X AND C da ${result.propagated}. OR combina ambos: ${result.outgoing}. `
+          + (selected === 3 ? 'El recorrido está completo.' : `Ese ${result.outgoing} será la entrada C del bit ${selected + 1}.`)
+        : prediction === null ? 'Elige una predicción para revelar las puertas y las salidas.'
+          : `Predicción: ${prediction}. Revela este bit para comprobarla.`;
+
+      const binary = (results.length === 4 ? String(results[3].outgoing) : '?')
+        + [3, 2, 1, 0].map((index) => results[index] ? results[index].sum : '?').join('');
+      get('#sum-bin').textContent = binary;
+      get('#sum-dec').textContent = results.length === 4
+        ? `= ${results.reduce((value, step, index) => value | (step.sum << index), results[3].outgoing << 4)} en decimal`
+        : 'Decimal pendiente';
+      get('#carry-final').textContent = results.length === 4
+        ? results[3].outgoing ? 'El acarreo final es 1: el resultado necesita cinco bits, no cabe en cuatro.'
+          : 'El acarreo final es 0: el resultado cabe en cuatro bits; el quinto queda en cero.'
+        : 'El quinto bit será el acarreo final; se revela al completar el bit 3.';
+    }
+
+    function restart() {
+      selected = 0;
+      prediction = null;
+      results = [];
+      render();
+    }
+
+    function select(index: number) {
+      selected = index;
+      prediction = null;
+      render();
+      title.focus({ preventScroll: true });
+    }
+
+    operandButtons.forEach((button) => button.addEventListener('click', () => {
+      const active = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(active));
+      button.textContent = active ? '1' : '0';
+      restart();
+    }));
+    predictionButtons.forEach((button) => button.addEventListener('click', () => {
+      prediction = Number(button.dataset.prediction);
+      render();
+    }));
+    stageButtons.forEach((button) => button.addEventListener('click', () => select(Number(button.dataset.stage))));
+    previous.addEventListener('click', () => select(selected - 1));
+    next.addEventListener('click', () => select(selected + 1));
+    reveal.addEventListener('click', () => {
+      if (prediction === null || results[selected]) return;
+      const a = (operand('a') >> selected) & 1;
+      const b = (operand('b') >> selected) & 1;
+      const incoming = selected === 0 ? 0 : results[selected - 1].outgoing;
+      const xor = a ^ b;
+      const generated = a & b;
+      const propagated = xor & incoming;
+      results.push({ a, b, incoming, xor, generated, propagated,
+        sum: xor ^ incoming, outgoing: generated | propagated, prediction });
+      render();
+      if (selected < 3) next.focus();
+      else title.focus({ preventScroll: true });
+    });
+    get('#carry-restart').addEventListener('click', restart);
+    get('#carry-clear').addEventListener('click', () => {
+      operandButtons.forEach((button) => {
+        button.setAttribute('aria-pressed', 'false');
+        button.textContent = '0';
+      });
+      restart();
+    });
+    render();
+  });
+</script>

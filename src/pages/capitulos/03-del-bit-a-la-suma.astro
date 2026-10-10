@@ -1,5 +1,6 @@
 ---
 import ChapterLayout from '../../layouts/ChapterLayout.astro';
+import CarryJourney from '../../components/CarryJourney.astro';
 ---
 
 <ChapterLayout
@@ -73,33 +74,7 @@ import ChapterLayout from '../../layouts/ChapterLayout.astro';
 
   <div class="demo" id="demo-adder">
     <h3>➕ Pruébalo: sumador de 4 bits</h3>
-    <p class="demo-hint">
-      Activa los bits de A y B (el bit más a la izquierda vale 8) y mira la suma propagarse.
-    </p>
-    <div class="demo-row">
-      <span class="demo-label">A = <strong id="dec-a">0</strong></span>
-      <button class="bit a-bit" data-w="8" aria-pressed="false">0</button>
-      <button class="bit a-bit" data-w="4" aria-pressed="false">0</button>
-      <button class="bit a-bit" data-w="2" aria-pressed="false">0</button>
-      <button class="bit a-bit" data-w="1" aria-pressed="false">0</button>
-    </div>
-    <div class="demo-row">
-      <span class="demo-label">B = <strong id="dec-b">0</strong></span>
-      <button class="bit b-bit" data-w="8" aria-pressed="false">0</button>
-      <button class="bit b-bit" data-w="4" aria-pressed="false">0</button>
-      <button class="bit b-bit" data-w="2" aria-pressed="false">0</button>
-      <button class="bit b-bit" data-w="1" aria-pressed="false">0</button>
-    </div>
-    <div class="demo-row">
-      <span class="demo-label">Acarreos:</span>
-      <span class="readout tracking-[0.35em]" id="carries">0000</span>
-    </div>
-    <div class="demo-row">
-      <span class="demo-label">A + B =</span>
-      <span class="readout tracking-[0.35em]" id="sum-bin">00000</span>
-      <span class="readout">= <strong id="sum-dec">0</strong> en decimal</span>
-    </div>
-    <p class="demo-hint mt-3" id="overflow-msg"></p>
+    <CarryJourney />
   </div>
 
   <h2>Restar sin saber restar: complemento a dos</h2>
@@ -128,49 +103,3 @@ import ChapterLayout from '../../layouts/ChapterLayout.astro';
     calculan… pero lo olvidan todo al instante. Toca darles memoria.
   </aside>
 </ChapterLayout>
-
-<script>
-  const aBits = [...document.querySelectorAll<HTMLButtonElement>('.a-bit')];
-  const bBits = [...document.querySelectorAll<HTMLButtonElement>('.b-bit')];
-
-  function value(bits: HTMLButtonElement[]) {
-    return bits.reduce(
-      (acc, btn) => acc + (btn.getAttribute('aria-pressed') === 'true' ? +btn.dataset.w! : 0),
-      0
-    );
-  }
-
-  function update() {
-    const a = value(aBits), b = value(bBits);
-    document.getElementById('dec-a')!.textContent = String(a);
-    document.getElementById('dec-b')!.textContent = String(b);
-
-    // simular el ripple-carry bit a bit, como el hardware real
-    let carry = 0;
-    const sumBits: number[] = [], carryBits: number[] = [];
-    for (let i = 0; i < 4; i++) {
-      const ai = (a >> i) & 1, bi = (b >> i) & 1;
-      const s = ai ^ bi ^ carry;                    // suma: XOR
-      carry = (ai & bi) | (carry & (ai ^ bi));      // acarreo: AND/OR
-      sumBits.unshift(s);
-      carryBits.unshift(carry);
-    }
-    document.getElementById('carries')!.textContent = carryBits.join('');
-    document.getElementById('sum-bin')!.textContent = carry + sumBits.join('');
-    document.getElementById('sum-dec')!.textContent = String(a + b);
-    document.getElementById('overflow-msg')!.textContent = carry
-      ? '💡 El quinto bit es el acarreo final: la suma no cabe en 4 bits. Esto es un desbordamiento (overflow).'
-      : '';
-  }
-
-  [...aBits, ...bBits].forEach((btn) =>
-    btn.addEventListener('click', () => {
-      const on = btn.getAttribute('aria-pressed') !== 'true';
-      btn.setAttribute('aria-pressed', String(on));
-      btn.textContent = on ? '1' : '0';
-      update();
-    })
-  );
-
-  update();
-</script>
