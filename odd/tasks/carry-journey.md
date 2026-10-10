@@ -14,7 +14,7 @@ The user approved this feature, preservation of pending changes, and build/brows
 - Delivery: `ask-on-risk`; forecast approximately 380 authored additions + deletions, including tracking. No PR authorized. Reassess actual size before committing.
 
 ## Task
-- [ ] **T1 — Deliver the guided carry journey.** Create `src/components/CarryJourney.astro`, integrate it into chapter 03, and verify the behavior and presentation before a Conventional Commit. Route: delegated (two non-trivial files; reading/preparation delegated).
+- [x] **T1 — Deliver the guided carry journey.** Create `src/components/CarryJourney.astro`, integrate it into chapter 03, and verify the behavior and presentation before a Conventional Commit. Route: delegated (two non-trivial files; reading/preparation delegated).
 
 ## Acceptance and checks
 - Operands remain four-bit toggles (0–15); progress begins at the least-significant bit.
@@ -33,11 +33,12 @@ The user approved this feature, preservation of pending changes, and build/brows
 - Live browser: PASS, 7+1=01000/8, 15+1=10000/16, 15+15=11110/30, 0+0=00000/0; correct/wrong predictions, unknown future outputs, four-stage boundaries, previous-stage inspection, restart, clear, and operand/pending-prediction resets.
 - Keyboard: PASS, Space/Enter completed 0+0; focus moves to the next control/stage heading, with a visible 2px outline. Component has no active animations.
 - Mobile: component PASS at 390x844 and 320x800, including interaction and no internal overflow. Existing page-level H1 overflow at 320px remains out of scope (client width 298, scroll width 324); no global/layout changes made.
-- Preservation: PASS, all unrelated modified files and the untracked CPU explorer match the baseline hashes; the chapter's existing heading text remains unchanged and will remain unstaged.
+- Preservation: PASS, all unrelated modified files and the untracked CPU explorer match the baseline hashes; the chapter's existing heading text remains unchanged and remains unstaged.
 - Screenshot: verified local preview saved outside the repository as `carry-journey.jpg` in the chat's visualization directory.
-- Commit: pending.
-- Mirror: full document saved and read back under Engram topic `odd/carry-journey/tasks`; refresh after commit evidence.
+- Work-unit commit: `ca9adb7cdae8cfcbc1e108db0b7a21a4a8a2f2e1` — `feat(arithmetic): teach carry propagation step by step` (293 additions + 73 deletions = 366 authored lines).
+- Tracking-only recovery commit: `docs(odd): record carry journey completion`; running authored count: 377 (366 feature + 11 recovery update). The feature remains below the delivery budget; no chain or PR was created.
+- Mirror: full current document saved and read back under Engram topic `odd/carry-journey/tasks`.
 - Rollback: remove the new component and restore only the chapter demo integration, leaving unrelated pending work intact.
 
 ## Next step
-Stage only the verified feature delta, commit T1, then record its commit identity and running authored line count. No push or PR is authorized.
+Completed locally. Try the chapter in the local preview; push/PR and any fix to the pre-existing 320px hero overflow require a separate user decision.
