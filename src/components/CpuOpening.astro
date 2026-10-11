@@ -5,7 +5,7 @@
       data-opening-canvas
       tabindex="0"
       role="img"
-      aria-label="CPU 3D. Usa las flechas para girar, más y menos para acercar o alejar, y Home para restablecer la vista. Selecciona los componentes con los botones del índice."
+      aria-label="CPU 3D. Usa las flechas para girar, más y menos para acercar o alejar, Home para restablecer y el botón Ver cara inferior para inspeccionar los contactos. Selecciona los componentes con los botones del índice."
       aria-describedby="opening-instructions"
     ></canvas>
     <div class="opening-caption">
@@ -20,6 +20,7 @@
     <button class="opening-toggle" type="button" data-opening-toggle aria-pressed="false">
       <span data-opening-toggle-label>Abrir CPU</span><span aria-hidden="true">↗</span>
     </button>
+    <button class="opening-underside" type="button" data-camera="underside">Ver cara inferior</button>
     <div class="opening-camera" role="group" aria-label="Controles de la cámara">
       <button type="button" data-camera="left" aria-label="Girar hacia la izquierda">←</button>
       <button type="button" data-camera="right" aria-label="Girar hacia la derecha">→</button>
@@ -30,7 +31,7 @@
       <button type="button" data-camera="out" aria-label="Alejar la CPU">−</button>
       <button type="button" data-camera="reset" aria-label="Restablecer la cámara">↺</button>
     </div>
-    <span class="opening-model-note">Interior lógico, no a escala</span>
+    <span class="opening-model-note">Modelo didáctico · contactos esquemáticos</span>
   </div>
 </div>
 
@@ -86,13 +87,15 @@
   .cpu-opening[data-renderer="unavailable"] .opening-eyebrow { display: none; }
   .opening-instructions { position: absolute; left: 18px; bottom: 12px; margin: 0; color: var(--text-soft); font: 400 .6rem var(--font-mono); visibility: hidden; max-width: calc(100% - 36px); }
   .cpu-opening[data-renderer="ready"] .opening-instructions { visibility: visible; }
-  .opening-tools { flex-shrink: 0; padding: 8px 16px; border-top: 1px solid var(--border); background: color-mix(in srgb, var(--bg-elev), transparent 12%); backdrop-filter: blur(8px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; pointer-events: auto; }
+  .opening-tools { flex-shrink: 0; padding: 8px 16px; border-top: 1px solid var(--border); background: color-mix(in srgb, var(--bg-elev), transparent 12%); backdrop-filter: blur(8px); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; pointer-events: auto; }
   .opening-tools[hidden] { display: none; }
   .opening-tools button { min-height: 32px; cursor: pointer; border: 1px solid var(--border); border-radius: 7px; font: 500 .76rem var(--font-sans); }
-  .opening-toggle { position: absolute; top: 16px; right: 18px; display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; padding: 8px 14px; border: 1px solid transparent; border-radius: 8px; color: var(--accent-contrast); background: var(--accent); font: 600 .8rem var(--font-sans); box-shadow: 0 4px 14px color-mix(in srgb, var(--accent), transparent 75%); transition: filter 160ms ease, transform 160ms ease, background 160ms ease, color 160ms ease; }
+  .opening-toggle { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 36px; padding: 8px 14px; border: 1px solid transparent; border-radius: 8px; color: var(--accent-contrast); background: var(--accent); font: 600 .8rem var(--font-sans); box-shadow: 0 4px 14px color-mix(in srgb, var(--accent), transparent 75%); transition: filter 160ms ease, transform 160ms ease, background 160ms ease, color 160ms ease; }
   .opening-toggle:hover { filter: brightness(1.08); transform: translateY(-1px); }
   .opening-toggle:active { transform: translateY(0); }
   .opening-toggle[aria-pressed="true"] { background: var(--bg-elev); color: var(--text); border-color: var(--border); box-shadow: 0 2px 8px color-mix(in srgb, var(--text), transparent 90%); }
+  .opening-underside { min-height: 36px; padding: 5px 10px; color: var(--accent-contrast); background: var(--accent); white-space: nowrap; }
+  .opening-underside:hover { filter: brightness(1.08); }
   .opening-camera { display: inline-flex; align-items: center; gap: 3px; }
   .opening-camera button { width: 30px; height: 30px; min-height: 30px; background: transparent; color: var(--text); font: 500 .88rem var(--font-mono); display: grid; place-items: center; }
   .opening-camera button:hover { background: var(--accent-soft); border-color: var(--accent); }
@@ -102,17 +105,17 @@
     .opening-caption { top: 12px; left: 14px; max-width: calc(100% - 135px); }
     .opening-caption p { font-size: .74rem; }
     .opening-instructions { left: 14px; bottom: 8px; font-size: .52rem; max-width: calc(100% - 28px); }
-    .opening-tools { padding: 6px 10px; gap: 6px; }
-    .opening-toggle { top: 12px; right: 12px; gap: 8px; padding: 6px 11px; font-size: .74rem; }
-    .opening-camera { flex: 1; justify-content: center; gap: 2px; }
-    .opening-camera button { width: 28px; height: 28px; min-height: 28px; font-size: .8rem; }
-    .camera-divider { height: 14px; margin: 0 2px; }
-    .opening-model-note { font-size: .5rem; width: 100%; text-align: center; }
+    .opening-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 6px 10px; gap: 6px; }
+    .opening-toggle, .opening-underside { width: 100%; min-height: 44px; padding: 6px 11px; font-size: .74rem; }
+    .opening-camera { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); width: 100%; gap: 4px; }
+    .opening-camera button { width: 100%; height: 44px; min-height: 44px; font-size: .8rem; }
+    .camera-divider { display: none; }
+    .opening-model-note { grid-column: 1 / -1; font-size: .5rem; text-align: center; }
   }
   @media (max-width: 380px) {
     .opening-caption { top: 10px; left: 10px; max-width: calc(100% - 118px); }
     .opening-caption p { font-size: .7rem; }
-    .opening-toggle { top: 10px; right: 10px; padding: 5px 9px; font-size: .7rem; gap: 6px; }
-    .opening-camera button { width: 26px; height: 26px; min-height: 26px; font-size: .74rem; }
+    .opening-toggle, .opening-underside { padding: 5px 9px; font-size: .7rem; gap: 6px; }
+    .opening-camera button { width: 100%; height: 40px; min-height: 40px; font-size: .74rem; }
   }
 </style>

@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 type PartId = 'control' | 'alu' | 'registers' | 'cache' | 'clock' | 'buses';
-type CameraAction = 'left' | 'right' | 'up' | 'down' | 'in' | 'out' | 'reset';
+type CameraAction = 'left' | 'right' | 'up' | 'down' | 'in' | 'out' | 'underside' | 'reset';
 
 const blocks: { id: PartId; label: string; x: number; z: number; width: number; depth: number }[] = [
   { id: 'control', label: 'UC / CONTROL', x: -1.17, z: -1.03, width: 1.76, depth: 1.44 },
@@ -35,7 +35,7 @@ export function mountCpuOpening(root: HTMLElement) {
     controls.enableDamping = false;
     controls.autoRotate = false;
     controls.minPolarAngle = .2;
-    controls.maxPolarAngle = 1.16;
+    controls.maxPolarAngle = Math.PI - .2;
     controls.minDistance = 8;
     controls.maxDistance = 23;
     controls.rotateSpeed = .55;
@@ -160,12 +160,17 @@ export function mountCpuOpening(root: HTMLElement) {
     const rimLight = new THREE.DirectionalLight(0xf4bd83, 2);
     rimLight.position.set(6, 3, -5);
     scene.add(rimLight);
+    const undersideFill = new THREE.DirectionalLight(0xf4bd83, 1.35);
+    undersideFill.position.set(-2, -6, 4);
+    scene.add(undersideFill);
 
-    box(scene, [19, .08, 17], [0, -.43, -1], physical('#e8edea', '--bg', .02, .95), .02);
+    const ground = new THREE.Group();
+    scene.add(ground);
+    box(ground, [19, .08, 17], [0, -.43, -1], physical('#e8edea', '--bg', .02, .95), .02);
     const gridSurface = material(new THREE.LineBasicMaterial({ color: '#aebbb4', transparent: true, opacity: .2 }), '--border');
     for (let coordinate = -8; coordinate <= 8; coordinate += .75) {
-      line(scene, [[coordinate, -.384, -9], [coordinate, -.384, 7]], gridSurface);
-      line(scene, [[-9, -.384, coordinate], [9, -.384, coordinate]], gridSurface);
+      line(ground, [[coordinate, -.384, -9], [coordinate, -.384, 7]], gridSurface);
+      line(ground, [[-9, -.384, coordinate], [9, -.384, coordinate]], gridSurface);
     }
 
     // A cheap, static contact shadow avoids a continuously updated shadow map.
@@ -184,7 +189,7 @@ export function mountCpuOpening(root: HTMLElement) {
       const shadow = new THREE.Mesh(geometry(new THREE.PlaneGeometry(9, 8)), material(new THREE.MeshBasicMaterial({ map: shadowTexture, transparent: true, depthWrite: false })));
       shadow.rotation.x = -Math.PI / 2;
       shadow.position.y = -.377;
-      scene.add(shadow);
+      ground.add(shadow);
     }
 
     const chip = new THREE.Group();
@@ -214,6 +219,24 @@ export function mountCpuOpening(root: HTMLElement) {
       }
     }
     chip.add(contacts);
+
+    // This is a teaching model: the array reads as a processor contact field, not a commercial pinout.
+    const undersideContactGeometry = geometry(new THREE.BoxGeometry(.18, .06, .18));
+    const undersideContacts = new THREE.InstancedMesh(undersideContactGeometry, copper, 308);
+    instancedMeshes.add(undersideContacts);
+    let undersideContactIndex = 0;
+    for (let row = 0; row < 18; row += 1) {
+      for (let column = 0; column < 18; column += 1) {
+        const cornerCutout = (row < 2 || row > 15) && (column < 2 || column > 15);
+        if (cornerCutout) continue;
+        transform.position.set(-2.32 + column * .273, -.32, -2.32 + row * .273);
+        transform.rotation.set(0, 0, 0);
+        transform.updateMatrix();
+        undersideContacts.setMatrixAt(undersideContactIndex++, transform.matrix);
+      }
+    }
+    undersideContacts.instanceMatrix.needsUpdate = true;
+    chip.add(undersideContacts);
 
     const gasket = physical('#17201f', undefined, .05, .8);
     for (const z of [-2.54, 2.54]) box(chip, [5.25, .15, .2], [0, .225, z], gasket, .04);
@@ -406,16 +429,37 @@ export function mountCpuOpening(root: HTMLElement) {
       updateSelection();
     }
 
+    function isUndersideView() {
+      return camera.position.y < controls.target.y;
+    }
+
+    function updateGroundVisibility() {
+      ground.visible = !isUndersideView();
+    }
+
     function resetCamera() {
       const aspect = canvas.clientWidth / Math.max(canvas.clientHeight, 1);
       const distance = aspect < .95 ? 13.5 : 11.8;
       camera.position.copy(new THREE.Vector3(.46, .74, .7).normalize().multiplyScalar(distance).add(controls.target));
       controls.update();
+      updateGroundVisibility();
+      status.textContent = openTarget ? 'Silicio expuesto · selecciona un bloque' : 'Encapsulado cerrado';
+      requestRender();
+    }
+
+    function showUnderside() {
+      const aspect = canvas.clientWidth / Math.max(canvas.clientHeight, 1);
+      const distance = aspect < .95 ? 13.5 : 11.8;
+      camera.position.copy(new THREE.Vector3(.46, -.74, .7).normalize().multiplyScalar(distance).add(controls.target));
+      controls.update();
+      updateGroundVisibility();
+      status.textContent = 'Cara inferior · contactos esquemáticos';
       requestRender();
     }
 
     function changeCamera(action: CameraAction) {
       if (action === 'reset') return resetCamera();
+      if (action === 'underside') return showUnderside();
       const spherical = new THREE.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
       if (action === 'left') spherical.theta -= .19;
       if (action === 'right') spherical.theta += .19;
@@ -447,7 +491,7 @@ export function mountCpuOpening(root: HTMLElement) {
       pointers.delete(event.pointerId);
       tap = undefined;
       // Opacity/visibility are not pick gates: no block can be picked through a closed lid.
-      if (!candidate || candidate.id !== event.pointerId || candidate.moved || Math.hypot(event.clientX - candidate.x, event.clientY - candidate.y) > 6 || pointers.size || lidProgress < .999 || !openTarget || lost) return;
+      if (!candidate || candidate.id !== event.pointerId || candidate.moved || Math.hypot(event.clientX - candidate.x, event.clientY - candidate.y) > 6 || pointers.size || lidProgress < .999 || !openTarget || lost || isUndersideView()) return;
       const bounds = canvas.getBoundingClientRect();
       if (!bounds.width || !bounds.height) return;
       pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, -((event.clientY - bounds.top) / bounds.height) * 2 + 1);
@@ -515,8 +559,12 @@ export function mountCpuOpening(root: HTMLElement) {
       updateTheme();
       requestRender();
     }, listenerOptions);
-    controls.addEventListener('change', requestRender);
-    cleanupTasks.push(() => controls.removeEventListener('change', requestRender));
+    const handleControlsChange = () => {
+      updateGroundVisibility();
+      requestRender();
+    };
+    controls.addEventListener('change', handleControlsChange);
+    cleanupTasks.push(() => controls.removeEventListener('change', handleControlsChange));
 
     updateTheme();
     applyLidPose();
