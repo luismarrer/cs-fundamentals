@@ -1,0 +1,107 @@
+<div class="cpu-opening" data-cpu-opening data-renderer="pending">
+  <div class="opening-view">
+    <canvas
+      class="opening-canvas"
+      data-opening-canvas
+      tabindex="0"
+      role="img"
+      aria-label="CPU 3D. Usa las flechas para girar, más y menos para acercar o alejar, y Home para restablecer la vista. Selecciona los componentes con los botones del índice."
+      aria-describedby="opening-instructions"
+    ></canvas>
+    <div class="opening-caption">
+      <span class="opening-eyebrow">CPU–08 / LABORATORIO</span>
+      <p data-opening-status aria-live="polite">Encapsulado cerrado</p>
+    </div>
+    <p class="opening-instructions" id="opening-instructions">
+      Arrastra para girar · rueda o dos dedos para acercar
+    </p>
+  </div>
+  <div class="opening-tools" data-opening-tools hidden>
+    <button class="opening-toggle" type="button" data-opening-toggle aria-pressed="false">
+      <span data-opening-toggle-label>Abrir CPU</span><span aria-hidden="true">↗</span>
+    </button>
+    <div class="opening-camera" role="group" aria-label="Controles de la cámara">
+      <button type="button" data-camera="left" aria-label="Girar hacia la izquierda">←</button>
+      <button type="button" data-camera="right" aria-label="Girar hacia la derecha">→</button>
+      <button type="button" data-camera="up" aria-label="Ver desde más arriba">↑</button>
+      <button type="button" data-camera="down" aria-label="Ver desde más abajo">↓</button>
+      <span class="camera-divider" aria-hidden="true"></span>
+      <button type="button" data-camera="in" aria-label="Acercar la CPU">+</button>
+      <button type="button" data-camera="out" aria-label="Alejar la CPU">−</button>
+      <button type="button" data-camera="reset" aria-label="Restablecer la cámara">↺</button>
+    </div>
+    <span class="opening-model-note">Interior lógico, no a escala</span>
+  </div>
+</div>
+
+<script>
+  const scenes = new Map<HTMLElement, { dispose: () => void }>();
+  let generation = 0;
+
+  async function initializeOpening() {
+    const currentGeneration = generation;
+    for (const root of document.querySelectorAll<HTMLElement>('[data-cpu-opening]')) {
+      if (scenes.has(root) || root.dataset.mounting === String(currentGeneration)) continue;
+      root.dataset.mounting = String(currentGeneration);
+      try {
+        const { mountCpuOpening } = await import('../lib/cpu-opening');
+        if (currentGeneration !== generation || !root.isConnected) continue;
+        scenes.set(root, mountCpuOpening(root));
+      } catch {
+        root.dataset.renderer = 'unavailable';
+        const status = root.querySelector<HTMLElement>('[data-opening-status]');
+        if (status) status.textContent = 'Vista 2D · la lección sigue disponible';
+      } finally {
+        if (root.dataset.mounting === String(currentGeneration)) delete root.dataset.mounting;
+      }
+    }
+  }
+
+  function disposeOpenings() {
+    generation += 1;
+    scenes.forEach((scene) => scene.dispose());
+    scenes.clear();
+  }
+
+  initializeOpening();
+  document.addEventListener('astro:page-load', initializeOpening);
+  document.addEventListener('astro:before-swap', disposeOpenings);
+  window.addEventListener('pagehide', disposeOpenings);
+  window.addEventListener('pageshow', initializeOpening);
+</script>
+
+<style>
+  .cpu-opening { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; pointer-events: none; }
+  .opening-view { position: relative; flex: 1; min-height: 0; }
+  .opening-canvas { display: block; width: 100%; height: 100%; visibility: hidden; pointer-events: none; }
+  .cpu-opening[data-renderer="ready"] .opening-canvas { visibility: visible; pointer-events: auto; cursor: grab; }
+  .opening-canvas:active { cursor: grabbing; }
+  .opening-canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -5px; }
+  .opening-caption { position: absolute; top: 20px; left: 24px; max-width: calc(100% - 175px); color: var(--text); visibility: hidden; }
+  .opening-eyebrow { color: var(--text-soft); font: 500 .52rem var(--font-mono); letter-spacing: .12em; }
+  .opening-caption p { margin: 4px 0 0; font: 600 .76rem var(--font-sans); }
+  .cpu-opening[data-renderer="ready"] .opening-caption,
+  .cpu-opening[data-renderer="unavailable"] .opening-caption { visibility: visible; }
+  .cpu-opening[data-renderer="unavailable"] .opening-caption { padding: 8px 10px; border-radius: 6px; background: var(--bg-elev); }
+  .cpu-opening[data-renderer="unavailable"] .opening-eyebrow { display: none; }
+  .opening-instructions { position: absolute; left: 24px; bottom: 13px; margin: 0; color: var(--text-soft); font: 400 .6rem var(--font-mono); visibility: hidden; }
+  .cpu-opening[data-renderer="ready"] .opening-instructions { visibility: visible; }
+  .opening-tools { flex-shrink: 0; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--bg-elev); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; pointer-events: auto; }
+  .opening-tools[hidden] { display: none; }
+  .opening-tools button { min-height: 36px; cursor: pointer; border: 1px solid var(--border); border-radius: 7px; font: 500 .76rem var(--font-sans); }
+  .opening-toggle { position: absolute; top: 20px; right: 20px; display: inline-flex; align-items: center; justify-content: space-between; gap: 22px; padding: 8px 13px; color: var(--bg-elev); background: var(--accent); box-shadow: 0 4px 14px rgb(23 32 31 / .12); }
+  .opening-toggle:hover { filter: brightness(1.08); }
+  .opening-camera { display: flex; align-items: center; gap: 3px; }
+  .opening-camera button { width: 32px; background: transparent; color: var(--text); font: 500 1rem var(--font-mono); }
+  .opening-camera button:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .camera-divider { width: 1px; height: 20px; margin: 0 3px; background: var(--border); }
+  .opening-model-note { flex-basis: 100%; color: var(--text-soft); font: 400 .52rem var(--font-mono); }
+  @media (max-width: 640px) {
+    .opening-caption { top: 14px; left: 18px; max-width: calc(100% - 155px); }
+    .opening-instructions { left: 18px; font-size: .5rem; }
+    .opening-tools { padding: 10px 12px; gap: 8px; }
+    .opening-toggle { top: 14px; right: 14px; gap: 12px; }
+    .opening-camera { flex: 1; justify-content: space-between; }
+    .opening-model-note { font-size: .5rem; }
+  }
+</style>

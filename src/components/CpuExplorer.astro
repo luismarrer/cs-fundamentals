@@ -1,0 +1,677 @@
+---
+import CpuOpening from './CpuOpening.astro';
+
+const parts = [
+  {
+    id: 'control',
+    short: 'UC',
+    name: 'Unidad de control',
+    category: 'Coordinación',
+    tagline: 'Convierte instrucciones en señales.',
+    description:
+      'Lee el código de operación y decide qué debe moverse en cada pulso: qué registro entrega datos, qué hace la ALU y dónde se guarda el resultado.',
+    role: 'Dirigir el ciclo de instrucción',
+    built: 'Puertas lógicas y decodificadores',
+    signal: 'En DECODE, traduce ADD 6 en una ruta concreta por el procesador.',
+    chapter: '/capitulos/05-la-cpu',
+    chapterLabel: 'Abrir capítulo 05',
+  },
+  {
+    id: 'alu',
+    short: 'ALU',
+    name: 'Unidad aritmético-lógica',
+    category: 'Cálculo',
+    tagline: 'Aquí los bits se vuelven resultados.',
+    description:
+      'Suma, resta, compara y aplica operaciones lógicas. No entiende números como nosotros: encadena puertas XOR, AND y OR sobre cada posición binaria.',
+    role: 'Transformar operandos',
+    built: 'Sumadores y puertas lógicas',
+    signal: 'En EXECUTE, recibe dos valores, aplica la operación y devuelve nuevos bits.',
+    chapter: '/capitulos/03-del-bit-a-la-suma',
+    chapterLabel: 'Abrir capítulo 03',
+  },
+  {
+    id: 'registers',
+    short: 'REG',
+    name: 'Registros',
+    category: 'Memoria inmediata',
+    tagline: 'Los datos que la CPU tiene en la mano.',
+    description:
+      'Son pequeñas filas de bits dentro del núcleo. El PC apunta a la siguiente instrucción; el IR conserva la actual y los registros generales alimentan a la ALU.',
+    role: 'Guardar el estado de trabajo',
+    built: 'Flip-flops sincronizados',
+    signal: 'En FETCH, el registro de instrucción captura lo que llega desde memoria.',
+    chapter: '/capitulos/04-memoria',
+    chapterLabel: 'Abrir capítulo 04',
+  },
+  {
+    id: 'cache',
+    short: 'L1',
+    name: 'Memoria caché',
+    category: 'Proximidad',
+    tagline: 'Una copia rápida de lo que probablemente hará falta.',
+    description:
+      'Mantiene instrucciones y datos frecuentes junto al núcleo para evitar esperar a la RAM. Es pequeña, pero responde en muchos menos ciclos.',
+    role: 'Reducir esperas de memoria',
+    built: 'Celdas SRAM',
+    signal: 'Antes de salir del chip, la CPU busca aquí una copia del dato solicitado.',
+    chapter: '/capitulos/04-memoria',
+    chapterLabel: 'Abrir capítulo 04',
+  },
+  {
+    id: 'clock',
+    short: 'CLK',
+    name: 'Reloj',
+    category: 'Sincronía',
+    tagline: 'El pulso que pone de acuerdo a todo el chip.',
+    description:
+      'Una señal periódica divide el trabajo en instantes precisos. En cada flanco, millones de elementos de memoria capturan su nuevo estado a la vez.',
+    role: 'Marcar cuándo cambia el estado',
+    built: 'Osciladores y red de distribución',
+    signal: 'Cada paso del ciclo termina cuando un pulso fija el nuevo estado.',
+    chapter: '/capitulos/04-memoria',
+    chapterLabel: 'Abrir capítulo 04',
+  },
+  {
+    id: 'buses',
+    short: 'BUS',
+    name: 'Buses internos',
+    category: 'Transporte',
+    tagline: 'Carreteras paralelas para direcciones, datos y control.',
+    description:
+      'No son un solo cable: son conjuntos de pistas que trasladan muchos bits a la vez entre registros, caché, unidad de control y ALU.',
+    role: 'Conectar los bloques del procesador',
+    built: 'Pistas metálicas sobre el silicio',
+    signal: 'Los pulsos luminosos del mapa siguen el bus activo en cada fase.',
+    chapter: '/capitulos/05-la-cpu',
+    chapterLabel: 'Abrir capítulo 05',
+  },
+];
+
+const initialPart = parts[0];
+const pinXs = [190, 240, 290, 340, 390, 440, 490, 540, 590];
+const pinYs = [145, 195, 245, 295, 345, 395, 445];
+---
+
+<section class="cpu-explorer" id="explorar" aria-labelledby="explorer-title">
+  <header class="explorer-masthead">
+    <div>
+      <p class="section-label"><span>Laboratorio interactivo</span> · Arquitectura de computadores</p>
+      <h1 id="explorer-title">Abre una CPU.<br /><span>Sigue la señal.</span></h1>
+    </div>
+    <div class="explorer-intro">
+      <p>
+        Explora las piezas de un procesador y avanza una instrucción por su interior.
+        De los transistores al resultado, sin cajas negras.
+      </p>
+      <div class="explorer-meta" aria-label="Características del recorrido">
+        <span><i class="status-dot"></i> Mapa activo</span>
+        <span>6 componentes</span>
+        <span>3 fases</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="cpu-workbench" id="cpu-workbench" data-phase="idle">
+    <aside class="parts-panel" aria-labelledby="parts-title">
+      <div class="panel-title">
+        <div>
+          <span>Índice / 01—06</span>
+          <h2 id="parts-title">Piezas del núcleo</h2>
+        </div>
+        <span class="panel-mark" aria-hidden="true">⌁</span>
+      </div>
+
+      <div class="parts-list">
+        {
+          parts.map((part, index) => (
+            <button
+              type="button"
+              class:list={['part-select', { active: index === 0 }]}
+              data-part={part.id}
+              data-index={String(index + 1).padStart(2, '0')}
+              data-short={part.short}
+              data-name={part.name}
+              data-category={part.category}
+              data-tagline={part.tagline}
+              data-description={part.description}
+              data-role={part.role}
+              data-built={part.built}
+              data-signal={part.signal}
+              data-chapter={part.chapter}
+              data-chapter-label={part.chapterLabel}
+              aria-pressed={index === 0 ? 'true' : 'false'}
+            >
+              <span class="part-number">{String(index + 1).padStart(2, '0')}</span>
+              <span class="part-select-copy">
+                <strong>{part.name}</strong>
+                <small>{part.category}</small>
+              </span>
+              <span class="part-abbr">{part.short}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="scale-note">
+        <span>Escala de abstracción</span>
+        <div class="scale-track" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <p><b>~10⁹</b> transistores colaborando como una sola máquina.</p>
+      </div>
+    </aside>
+
+    <section class="cpu-stage" aria-labelledby="stage-title">
+      <header class="stage-header">
+        <div class="stage-readout" aria-live="polite">
+          <span id="cycle-kicker">SEÑAL / EN REPOSO</span>
+          <strong id="stage-title">Selecciona una pieza o inicia el ciclo</strong>
+        </div>
+        <div class="stage-legend" aria-label="Tipo de representación">
+          <span><i></i> Mapa lógico</span>
+          <span>CPU didáctica · 8 bit</span>
+        </div>
+      </header>
+
+      <div class="cpu-canvas">
+        <CpuOpening />
+        <div class="canvas-coordinate canvas-coordinate-x" aria-hidden="true">X / 00—FF</div>
+        <div class="canvas-coordinate canvas-coordinate-y" aria-hidden="true">Y / 00—FF</div>
+
+        <svg
+          class="cpu-map"
+          viewBox="0 0 780 590"
+          role="img"
+          aria-labelledby="cpu-map-title cpu-map-description"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <title id="cpu-map-title">Mapa interactivo de una CPU didáctica</title>
+          <desc id="cpu-map-description">
+            Diagrama de un procesador con unidad de control, registros, ALU, caché, reloj y buses.
+            Cada bloque se puede seleccionar para conocer su función.
+          </desc>
+          <defs>
+            <pattern id="board-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" class="map-grid-line"></path>
+            </pattern>
+            <filter id="chip-shadow" x="-20%" y="-20%" width="140%" height="150%">
+              <feDropShadow dx="0" dy="18" stdDeviation="18" flood-opacity=".16"></feDropShadow>
+            </filter>
+          </defs>
+
+          <rect class="map-grid" x="0" y="0" width="780" height="590" fill="url(#board-grid)"></rect>
+
+          <g class="board-traces" aria-hidden="true">
+            <path d="M22 92H132V126H166"></path>
+            <path d="M18 486H112V450H166"></path>
+            <path d="M612 88H700V136H764"></path>
+            <path d="M616 462H704V510H764"></path>
+            <path d="M60 196H116V294H166"></path>
+            <path d="M616 286H752"></path>
+            <circle cx="22" cy="92" r="4"></circle>
+            <circle cx="18" cy="486" r="4"></circle>
+            <circle cx="764" cy="136" r="4"></circle>
+            <circle cx="764" cy="510" r="4"></circle>
+            <circle cx="60" cy="196" r="4"></circle>
+            <circle cx="752" cy="286" r="4"></circle>
+          </g>
+
+          <g class="chip-pins" aria-hidden="true">
+            {pinXs.map((x) => <rect x={x} y="54" width="22" height="34" rx="4"></rect>)}
+            {pinXs.map((x) => <rect x={x} y="502" width="22" height="34" rx="4"></rect>)}
+            {pinYs.map((y) => <rect x="126" y={y} width="34" height="22" rx="4"></rect>)}
+            {pinYs.map((y) => <rect x="620" y={y} width="34" height="22" rx="4"></rect>)}
+          </g>
+
+          <g filter="url(#chip-shadow)" aria-hidden="true">
+            <rect class="chip-package-shadow" x="154" y="82" width="482" height="430" rx="44"></rect>
+            <rect class="chip-package" x="144" y="72" width="492" height="430" rx="44"></rect>
+            <path class="chip-corner" d="M144 126V112a40 40 0 0 1 40-40h16l-56 54Z"></path>
+            <rect class="chip-die" x="174" y="102" width="432" height="370" rx="24"></rect>
+          </g>
+
+          <g class="die-labels" aria-hidden="true">
+            <text x="190" y="124">DIE / CPU–08</text>
+            <text x="590" y="454" text-anchor="end">REV. 1971→HOY</text>
+            <path d="M190 134H272"></path>
+            <circle cx="582" cy="120" r="4"></circle>
+          </g>
+
+          <g
+            class="cpu-part-shape active"
+            data-cpu-part="control"
+            role="button"
+            tabindex="0"
+            aria-label="Seleccionar Unidad de control"
+            aria-pressed="true"
+          >
+            <rect class="part-hit" x="194" y="144" width="170" height="116" rx="14"></rect>
+            <rect class="part-block" x="194" y="144" width="170" height="116" rx="14"></rect>
+            <path class="part-detail" d="M214 184H270M214 202H344M214 220H318"></path>
+            <circle class="part-node" cx="334" cy="174" r="9"></circle>
+            <text class="part-code" x="214" y="166">UC / 01</text>
+            <text class="part-name" x="214" y="244">CONTROL</text>
+          </g>
+
+          <g
+            class="cpu-part-shape"
+            data-cpu-part="registers"
+            role="button"
+            tabindex="0"
+            aria-label="Seleccionar Registros"
+            aria-pressed="false"
+          >
+            <rect class="part-hit" x="194" y="278" width="170" height="76" rx="14"></rect>
+            <rect class="part-block" x="194" y="278" width="170" height="76" rx="14"></rect>
+            <g class="register-bits" aria-hidden="true">
+              <rect x="214" y="300" width="16" height="16" rx="3"></rect>
+              <rect x="235" y="300" width="16" height="16" rx="3"></rect>
+              <rect x="256" y="300" width="16" height="16" rx="3"></rect>
+              <rect x="277" y="300" width="16" height="16" rx="3"></rect>
+              <rect x="298" y="300" width="16" height="16" rx="3"></rect>
+              <rect x="319" y="300" width="16" height="16" rx="3"></rect>
+            </g>
+            <text class="part-code" x="214" y="340">REGISTROS / 8 BIT</text>
+          </g>
+
+          <g
+            class="cpu-part-shape"
+            data-cpu-part="alu"
+            role="button"
+            tabindex="0"
+            aria-label="Seleccionar Unidad aritmético-lógica"
+            aria-pressed="false"
+          >
+            <path class="part-hit" d="M404 230H548L526 292l22 62H404l26-62-26-62Z"></path>
+            <path class="part-block" d="M404 230H548L526 292l22 62H404l26-62-26-62Z"></path>
+            <path class="part-detail" d="M440 268H510M440 286H492M440 304H516"></path>
+            <text class="part-code" x="440" y="252">ALU / 02</text>
+            <text class="part-name" x="440" y="334">Σ XOR AND</text>
+          </g>
+
+          <g
+            class="cpu-part-shape"
+            data-cpu-part="clock"
+            role="button"
+            tabindex="0"
+            aria-label="Seleccionar Reloj"
+            aria-pressed="false"
+          >
+            <rect class="part-hit" x="414" y="144" width="142" height="62" rx="14"></rect>
+            <rect class="part-block" x="414" y="144" width="142" height="62" rx="14"></rect>
+            <path class="clock-wave" d="M434 180h18v-18h22v36h22v-18h22"></path>
+            <text class="part-code" x="434" y="162">CLK</text>
+            <text class="part-name" x="526" y="190" text-anchor="end">1 Hz</text>
+          </g>
+
+          <g
+            class="cpu-part-shape"
+            data-cpu-part="cache"
+            role="button"
+            tabindex="0"
+            aria-label="Seleccionar Memoria caché"
+            aria-pressed="false"
+          >
+            <rect class="part-hit" x="194" y="374" width="362" height="72" rx="14"></rect>
+            <rect class="part-block" x="194" y="374" width="362" height="72" rx="14"></rect>
+            <g class="cache-cells" aria-hidden="true">
+              {Array.from({ length: 12 }, (_, index) => (
+                <rect x={214 + index * 26} y="398" width="18" height="18" rx="3"></rect>
+              ))}
+            </g>
+            <text class="part-code" x="214" y="436">CACHÉ L1 / SRAM</text>
+          </g>
+
+          <g
+            class="cpu-part-shape bus-shape"
+            data-cpu-part="buses"
+            role="button"
+            tabindex="0"
+            aria-label="Seleccionar Buses internos"
+            aria-pressed="false"
+          >
+            <rect class="part-hit" x="370" y="130" width="34" height="250" rx="12"></rect>
+            <path class="bus-line" d="M380 148V360M390 148V360"></path>
+            <path class="bus-line" d="M352 268H420M352 326H420"></path>
+            <circle class="bus-node" cx="385" cy="268" r="8"></circle>
+            <circle class="bus-node" cx="385" cy="326" r="8"></circle>
+            <text class="bus-label" x="374" y="150" transform="rotate(90 374 150)">BUS 8×</text>
+          </g>
+
+          <g class="memory-port" aria-hidden="true">
+            <rect x="668" y="235" width="88" height="102" rx="14"></rect>
+            <text x="712" y="260" text-anchor="middle">RAM</text>
+            <path d="M686 278H738M686 294H724M686 310H738"></path>
+            <circle cx="680" cy="324" r="3"></circle>
+            <circle cx="692" cy="324" r="3"></circle>
+          </g>
+
+          <g class="signal-routes" aria-hidden="true">
+            <path class="signal-path signal-fetch" d="M668 286H588V326H364"></path>
+            <path class="signal-path signal-decode" d="M364 202H385V268H430"></path>
+            <path class="signal-path signal-execute" d="M364 326H430M526 326H580V410H556"></path>
+
+            <circle class="signal-pulse signal-fetch" r="6">
+              <animateMotion dur="1.25s" repeatCount="indefinite" path="M668 286H588V326H364"></animateMotion>
+            </circle>
+            <circle class="signal-pulse signal-decode" r="6">
+              <animateMotion dur="1.25s" repeatCount="indefinite" path="M364 202H385V268H430"></animateMotion>
+            </circle>
+            <circle class="signal-pulse signal-execute" r="6">
+              <animateMotion dur="1.25s" repeatCount="indefinite" path="M364 326H430M526 326H580V410H556"></animateMotion>
+            </circle>
+          </g>
+        </svg>
+
+        <div class="canvas-tip">
+          <span>Prueba esto</span>
+          <p>Pulsa un bloque para abrir su ficha. Después avanza la señal.</p>
+        </div>
+      </div>
+
+      <div class="cycle-console">
+        <div class="phase-selector" aria-label="Fases del ciclo de instrucción">
+          <button type="button" data-cycle-phase="fetch" aria-pressed="false">
+            <span>01</span><strong>Fetch</strong><small>buscar</small>
+          </button>
+          <button type="button" data-cycle-phase="decode" aria-pressed="false">
+            <span>02</span><strong>Decode</strong><small>interpretar</small>
+          </button>
+          <button type="button" data-cycle-phase="execute" aria-pressed="false">
+            <span>03</span><strong>Execute</strong><small>actuar</small>
+          </button>
+        </div>
+        <div class="cycle-actions">
+          <button class="cycle-step" id="cycle-step" type="button">
+            Avanzar señal <span aria-hidden="true">→</span>
+          </button>
+          <button class="cycle-auto" id="cycle-auto" type="button" aria-pressed="false">
+            <span class="play-icon" aria-hidden="true">▶</span>
+            <span class="cycle-auto-label">Repetir ciclo</span>
+          </button>
+          <button class="cycle-reset" id="cycle-reset" type="button" aria-label="Reiniciar ciclo">↺</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="part-dossier" aria-labelledby="part-title">
+      <div class="dossier-topline">
+        <span id="part-index">01 / COORDINACIÓN</span>
+        <span>FICHA CPU–A</span>
+      </div>
+      <div class="dossier-symbol" id="part-symbol" data-part="control">
+        <span>{initialPart.short}</span>
+        <i></i>
+      </div>
+      <p class="dossier-category" id="part-category">{initialPart.category}</p>
+      <h2 id="part-title">{initialPart.name}</h2>
+      <p class="dossier-tagline" id="part-tagline">{initialPart.tagline}</p>
+      <p class="dossier-description" id="part-description">{initialPart.description}</p>
+
+      <dl class="dossier-facts">
+        <div>
+          <dt>Su trabajo</dt>
+          <dd id="part-role">{initialPart.role}</dd>
+        </div>
+        <div>
+          <dt>Está hecha de</dt>
+          <dd id="part-built">{initialPart.built}</dd>
+        </div>
+      </dl>
+
+      <div class="signal-note">
+        <span><i></i> En la señal</span>
+        <p id="part-signal">{initialPart.signal}</p>
+      </div>
+
+      <a class="dossier-link" id="part-link" href={initialPart.chapter}>
+        <span id="part-link-label">{initialPart.chapterLabel}</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+      <p class="sr-only" id="part-announcement" aria-live="polite"></p>
+    </aside>
+  </div>
+
+  <p class="explorer-disclaimer">
+    <span>Nota de escala</span>
+    Representación didáctica de las funciones de una CPU; no reproduce la distribución física
+    de un procesador comercial.
+  </p>
+</section>
+
+<script>
+  const workbench = document.getElementById('cpu-workbench');
+  const partButtons = [...document.querySelectorAll<HTMLButtonElement>('.part-select')];
+  const mapParts = [...document.querySelectorAll<SVGElement>('[data-cpu-part]')];
+  const partButtonById = new Map(partButtons.map((button) => [button.dataset.part, button]));
+
+  function setText(id: string, value: string) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  }
+
+  function selectPart(id: string, announce = true) {
+    const source = partButtonById.get(id);
+    if (!source) return;
+
+    partButtons.forEach((button) => {
+      const active = button === source;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+
+    mapParts.forEach((part) => {
+      const active = part.dataset.cpuPart === id;
+      part.classList.toggle('active', active);
+      part.setAttribute('aria-pressed', String(active));
+    });
+
+    setText('part-index', `${source.dataset.index} / ${source.dataset.category?.toUpperCase()}`);
+    setText('part-category', source.dataset.category ?? '');
+    setText('part-title', source.dataset.name ?? '');
+    setText('part-tagline', source.dataset.tagline ?? '');
+    setText('part-description', source.dataset.description ?? '');
+    setText('part-role', source.dataset.role ?? '');
+    setText('part-built', source.dataset.built ?? '');
+    setText('part-signal', source.dataset.signal ?? '');
+    setText('part-link-label', source.dataset.chapterLabel ?? '');
+
+    const symbol = document.getElementById('part-symbol');
+    if (symbol) {
+      const symbolLabel = symbol.querySelector('span');
+      if (symbolLabel) symbolLabel.textContent = source.dataset.short ?? '';
+      symbol.dataset.part = id;
+    }
+
+    const link = document.getElementById('part-link') as HTMLAnchorElement | null;
+    if (link && source.dataset.chapter) link.href = source.dataset.chapter;
+
+    if (announce) {
+      setText('part-announcement', `Seleccionado: ${source.dataset.name}. ${source.dataset.tagline}`);
+    } else {
+      setText('part-announcement', '');
+    }
+  }
+
+  partButtons.forEach((button) => {
+    button.addEventListener('click', () => selectPart(button.dataset.part ?? 'control'));
+  });
+
+  mapParts.forEach((part) => {
+    part.addEventListener('click', () => selectPart(part.dataset.cpuPart ?? 'control'));
+    part.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        selectPart(part.dataset.cpuPart ?? 'control');
+      }
+    });
+  });
+
+  const phases = [
+    {
+      id: 'fetch',
+      kicker: 'CICLO 01 / FETCH',
+      title: 'La instrucción viaja de memoria al registro IR',
+      part: 'registers',
+    },
+    {
+      id: 'decode',
+      kicker: 'CICLO 02 / DECODE',
+      title: 'La unidad de control interpreta «ADD 6»',
+      part: 'control',
+    },
+    {
+      id: 'execute',
+      kicker: 'CICLO 03 / EXECUTE',
+      title: 'La ALU suma y devuelve el resultado',
+      part: 'alu',
+    },
+  ] as const;
+
+  const phaseButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-cycle-phase]')];
+  const stepButton = document.getElementById('cycle-step') as HTMLButtonElement | null;
+  const autoButton = document.getElementById('cycle-auto') as HTMLButtonElement | null;
+  const resetButton = document.getElementById('cycle-reset') as HTMLButtonElement | null;
+  let phaseIndex = -1;
+  let autoTimer: number | undefined;
+
+  function showPhase(index: number) {
+    phaseIndex = ((index % phases.length) + phases.length) % phases.length;
+    const phase = phases[phaseIndex];
+    if (workbench) workbench.dataset.phase = phase.id;
+    setText('cycle-kicker', phase.kicker);
+    setText('stage-title', phase.title);
+    phaseButtons.forEach((button) => {
+      const active = button.dataset.cyclePhase === phase.id;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    selectPart(phase.part, false);
+  }
+
+  function stopAuto() {
+    if (autoTimer !== undefined) window.clearInterval(autoTimer);
+    autoTimer = undefined;
+    if (autoButton) {
+      autoButton.setAttribute('aria-pressed', 'false');
+      autoButton.querySelector('.cycle-auto-label')!.textContent = 'Repetir ciclo';
+      autoButton.querySelector('.play-icon')!.textContent = '▶';
+    }
+  }
+
+  function startAuto() {
+    if (phaseIndex < 0) showPhase(0);
+    autoTimer = window.setInterval(() => showPhase(phaseIndex + 1), 1800);
+    if (autoButton) {
+      autoButton.setAttribute('aria-pressed', 'true');
+      autoButton.querySelector('.cycle-auto-label')!.textContent = 'Pausar ciclo';
+      autoButton.querySelector('.play-icon')!.textContent = 'Ⅱ';
+    }
+  }
+
+  phaseButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      stopAuto();
+      showPhase(index);
+    });
+  });
+
+  stepButton?.addEventListener('click', () => {
+    stopAuto();
+    showPhase(phaseIndex + 1);
+  });
+
+  autoButton?.addEventListener('click', () => {
+    if (autoTimer === undefined) startAuto();
+    else stopAuto();
+  });
+
+  resetButton?.addEventListener('click', () => {
+    stopAuto();
+    phaseIndex = -1;
+    if (workbench) workbench.dataset.phase = 'idle';
+    setText('cycle-kicker', 'SEÑAL / EN REPOSO');
+    setText('stage-title', 'Selecciona una pieza o inicia el ciclo');
+    phaseButtons.forEach((button) => {
+      button.classList.remove('active');
+      button.setAttribute('aria-pressed', 'false');
+    });
+    selectPart('control');
+  });
+
+  // The SVG owns its motion lifecycle even when a WebGL scene cannot be mounted.
+  const fallbackMap = workbench?.querySelector<SVGSVGElement>('.cpu-map');
+  const fallbackHost = fallbackMap?.parentElement;
+  const fallbackMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let fallbackInViewport = false;
+
+  function syncFallbackMotion() {
+    const visible = fallbackHost?.dataset.renderer !== 'ready';
+    if (visible && fallbackInViewport && !document.hidden && !fallbackMotion.matches) {
+      fallbackMap?.unpauseAnimations();
+    } else {
+      fallbackMap?.pauseAnimations();
+    }
+  }
+
+  const fallbackState = new MutationObserver(syncFallbackMotion);
+  const cycleVisibility = new IntersectionObserver(([entry]) => {
+    fallbackInViewport = entry.isIntersecting;
+    if (!fallbackInViewport) stopAuto();
+    syncFallbackMotion();
+  });
+
+  function observeFallback() {
+    if (!fallbackHost?.isConnected) return;
+    fallbackState.observe(fallbackHost, { attributes: true, attributeFilter: ['data-renderer'] });
+    cycleVisibility.observe(fallbackHost);
+    syncFallbackMotion();
+  }
+
+  function pauseFallback() {
+    stopAuto();
+    fallbackMap?.pauseAnimations();
+    fallbackInViewport = false;
+    fallbackState.disconnect();
+    cycleVisibility.disconnect();
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAuto();
+    syncFallbackMotion();
+  });
+  fallbackMotion.addEventListener('change', syncFallbackMotion);
+  window.addEventListener('pagehide', pauseFallback);
+  window.addEventListener('pageshow', observeFallback);
+  document.addEventListener('astro:before-swap', pauseFallback);
+  observeFallback();
+</script>
+
+<style>
+  .cpu-explorer { padding-top: 24px; }
+  .explorer-masthead { margin-bottom: 20px; gap: 32px; }
+  .explorer-masthead h1 { font-size: clamp(2.2rem, 3.7vw, 3.7rem); line-height: .98; }
+  .section-label { margin-bottom: 10px; }
+  .explorer-intro > p { font-size: .94rem; line-height: 1.5; }
+  .explorer-meta { margin-top: 12px; }
+  .cpu-workbench { min-height: 0; }
+  .cpu-stage { align-self: start; }
+  .cpu-canvas { height: clamp(340px, 52vh, 440px); min-height: 0; }
+  .cpu-map { height: 100%; min-height: 0; }
+  .cpu-canvas[data-renderer="ready"] .cpu-map { visibility: hidden; }
+  .cpu-canvas[data-renderer="ready"] .canvas-coordinate,
+  .cpu-canvas[data-renderer="ready"] .canvas-tip { visibility: hidden; }
+  @media (max-width: 820px) {
+    .cpu-explorer { padding-top: 18px; }
+    .explorer-masthead { gap: 14px; margin-bottom: 16px; }
+    .explorer-masthead h1 { font-size: clamp(2rem, 8vw, 3rem); }
+    .explorer-intro > p { font-size: .84rem; }
+    .explorer-meta { margin-top: 9px; }
+    .cpu-stage { order: -1; width: 100%; min-height: 0; }
+    .cpu-canvas { height: clamp(320px, 44svh, 400px); }
+    .parts-panel { border-top: 1px solid var(--border); }
+  }
+  @media (max-width: 380px) {
+    /* Keep the original landing navigation within narrow viewports. */
+    :global(body > header > div.flex) { flex-wrap: wrap; }
+  }
+</style>

@@ -1,32 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Card from '../components/Card.astro';
+import CpuExplorer from '../components/CpuExplorer.astro';
 ---
 
 <BaseLayout
-  title="Fundamentos de Computación — Del transistor a la CPU"
-  description="Sitio educativo de Ciencias de la Computación: entiende cómo un puñado de transistores se convierte en puertas lógicas, operaciones y, finalmente, una CPU."
+  title="CPU abierta — Explora un procesador por dentro"
+  description="Una experiencia interactiva en español para entender una CPU: explora sus componentes y sigue una instrucción desde los transistores hasta el resultado."
 >
   <main>
-    <div class="px-5 pb-12 pt-18 text-center">
-      <div class="mx-auto max-w-[920px]">
-        <h1 class="mb-4 text-[clamp(2rem,5vw,3.1rem)] font-extrabold leading-tight tracking-tight">
-          Del <span class="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">transistor</span>{' '}
-          a la <span class="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">CPU</span>
-        </h1>
-        <p class="mx-auto mb-8 max-w-[640px] text-lg text-soft">
-          Un viaje de abajo hacia arriba por las Ciencias de la Computación: cómo un simple interruptor
-          de silicio se convierte en puertas lógicas, las puertas en operaciones, y las operaciones en
-          el procesador que ejecuta todo lo que ves en pantalla.
-        </p>
-        <a
-          class="inline-block rounded-full bg-accent px-6 py-3 font-semibold text-white shadow-lg shadow-accent/25 transition-transform hover:-translate-y-0.5"
-          href="/capitulos/01-el-transistor"
-        >
-          Empezar el viaje →
-        </a>
-      </div>
-    </div>
+    <CpuExplorer />
 
     <section id="curso" class="py-10">
       <div class="mx-auto max-w-[920px] px-5">

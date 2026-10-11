@@ -100,3 +100,1206 @@
   .mem-row.current { @apply bg-accent-soft outline outline-1 outline-accent; }
   .cpu-log { @apply mt-4 min-h-[2.6rem] rounded-lg bg-code px-4 py-3 font-mono text-sm; }
 }
+
+/* CPU welcome: keep the teaching workbench independent from the site theme. */
+.cpu-explorer {
+  color-scheme: light;
+  --bg: #e8edea;
+  --bg-elev: #f8faf7;
+  --text: #17201f;
+  --text-soft: #62706d;
+  --border: #c6d0cb;
+  --accent: #087c77;
+  --accent-soft: #d4ebe7;
+  --accent-2: #c96d3b;
+  --ok: #14785d;
+  --off: #86928e;
+  --code-bg: #dfe6e2;
+  --signal: #eda73e;
+  --panel: rgba(250, 252, 249, 0.86);
+  --grid: rgba(23, 32, 31, 0.07);
+  --package: #cbd3ce;
+  --package-edge: #aebbb4;
+  --die: #f1f5f1;
+  --pin: #83938c;
+  --note-bg: #f3e6b8;
+  --shadow-panel: 0 28px 80px rgba(34, 48, 44, 0.12);
+  --part-control: #188c84;
+  --part-alu: #ca6830;
+  --part-registers: #586fbf;
+  --part-cache: #8056a9;
+  --part-clock: #a87e0a;
+  --part-buses: #b94f61;
+  --font-sans: "IBM Plex Sans", "Avenir Next", system-ui, sans-serif;
+  --font-display: "Archivo Black", "Arial Black", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  color: var(--text);
+  font-family: var(--font-sans)
+}
+
+@media (prefers-color-scheme: dark) {
+    .cpu-explorer {
+    color-scheme: dark;
+    --bg: #0d1213;
+    --bg-elev: #151c1c;
+    --text: #e9f0ed;
+    --text-soft: #9ba9a5;
+    --border: #2a3835;
+    --accent: #67d1c9;
+    --accent-soft: #173936;
+    --accent-2: #efa06a;
+    --ok: #77d5ad;
+    --off: #667773;
+    --code-bg: #1b2524;
+    --signal: #f2ba57;
+    --panel: rgba(20, 28, 28, 0.9);
+    --grid: rgba(233, 240, 237, 0.055);
+    --package: #273431;
+    --package-edge: #3a4a46;
+    --die: #111918;
+    --pin: #4b5e58;
+    --note-bg: #40391f;
+    --shadow-panel: 0 30px 90px rgba(0, 0, 0, 0.34);
+    --part-control: #67d1c9;
+    --part-alu: #efa06a;
+    --part-registers: #91a2ed;
+    --part-cache: #bc91e4;
+    --part-clock: #e2bd52;
+    --part-buses: #e78191
+    }
+}
+
+@layer components {
+
+  .cpu-explorer {
+    width: min(100% - 32px, 1560px);
+    margin: 0 auto;
+    padding-top: clamp(42px, 6vw, 88px);
+    scroll-margin-top: 88px;
+  }
+
+  :where(.cpu-explorer) .explorer-masthead {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.7fr);
+    align-items: end;
+    gap: clamp(40px, 8vw, 150px);
+  }
+
+  :where(.cpu-explorer) .section-label {
+    margin: 0 0 15px;
+    color: var(--text-soft);
+    font: 500 clamp(0.64rem, 1vw, 0.72rem) var(--font-mono);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .section-label span {
+    color: var(--accent);
+  }
+
+  :where(.cpu-explorer) .section-label span::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    margin: 0 9px 3px 0;
+    background: currentColor;
+  }
+
+  :where(.cpu-explorer) .explorer-masthead h1 {
+    max-width: 900px;
+    margin: 0;
+    color: var(--text);
+    font: 400 clamp(3rem, 6.7vw, 7rem) / 0.88 var(--font-display);
+    letter-spacing: -0.07em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .explorer-masthead h1 span {
+    color: var(--accent);
+  }
+
+  :where(.cpu-explorer) .explorer-intro {
+    padding-bottom: 8px;
+  }
+
+  :where(.cpu-explorer) .explorer-intro > p {
+    max-width: 530px;
+    margin: 0;
+    color: var(--text-soft);
+    font-size: clamp(1rem, 1.4vw, 1.16rem);
+    line-height: 1.65;
+  }
+
+  :where(.cpu-explorer) .explorer-meta {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  :where(.cpu-explorer) .explorer-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 10px;
+    color: var(--text-soft);
+    font: 500 0.62rem var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok), transparent 80%);
+  }
+
+  :where(.cpu-explorer) .cpu-workbench {
+    min-height: 720px;
+    display: grid;
+    grid-template-columns: 270px minmax(560px, 1fr) 330px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background: var(--panel);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(16px);
+  }
+
+  :where(.cpu-explorer) .parts-panel,
+  :where(.cpu-explorer) .part-dossier {
+    min-width: 0;
+    padding: 20px;
+    background: color-mix(in srgb, var(--bg-elev), transparent 28%);
+  }
+
+  :where(.cpu-explorer) .parts-panel {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .panel-title {
+    min-height: 58px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .panel-title span,
+  :where(.cpu-explorer) .dossier-topline,
+  :where(.cpu-explorer) .dossier-category {
+    color: var(--text-soft);
+    font: 500 0.58rem var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .panel-title h2 {
+    margin: 5px 0 14px;
+    font: 600 0.9rem var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+
+  :where(.cpu-explorer) .panel-title .panel-mark {
+    width: 29px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+
+  :where(.cpu-explorer) .parts-list {
+    padding: 10px 0;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  :where(.cpu-explorer) .part-select[data-part="control"],
+  :where(.cpu-explorer) .cpu-part-shape[data-cpu-part="control"],
+  :where(.cpu-explorer) .dossier-symbol[data-part="control"] { --part-color: var(--part-control); }
+
+  :where(.cpu-explorer) .part-select[data-part="alu"],
+  :where(.cpu-explorer) .cpu-part-shape[data-cpu-part="alu"],
+  :where(.cpu-explorer) .dossier-symbol[data-part="alu"] { --part-color: var(--part-alu); }
+
+  :where(.cpu-explorer) .part-select[data-part="registers"],
+  :where(.cpu-explorer) .cpu-part-shape[data-cpu-part="registers"],
+  :where(.cpu-explorer) .dossier-symbol[data-part="registers"] { --part-color: var(--part-registers); }
+
+  :where(.cpu-explorer) .part-select[data-part="cache"],
+  :where(.cpu-explorer) .cpu-part-shape[data-cpu-part="cache"],
+  :where(.cpu-explorer) .dossier-symbol[data-part="cache"] { --part-color: var(--part-cache); }
+
+  :where(.cpu-explorer) .part-select[data-part="clock"],
+  :where(.cpu-explorer) .cpu-part-shape[data-cpu-part="clock"],
+  :where(.cpu-explorer) .dossier-symbol[data-part="clock"] { --part-color: var(--part-clock); }
+
+  :where(.cpu-explorer) .part-select[data-part="buses"],
+  :where(.cpu-explorer) .cpu-part-shape[data-cpu-part="buses"],
+  :where(.cpu-explorer) .dossier-symbol[data-part="buses"] { --part-color: var(--part-buses); }
+
+  :where(.cpu-explorer) .part-select {
+    width: 100%;
+    min-height: 70px;
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) 34px;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    background: transparent;
+    color: var(--text);
+    padding: 8px 9px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  :where(.cpu-explorer) .part-select:hover {
+    transform: translateX(2px);
+    background: color-mix(in srgb, var(--part-color), transparent 93%);
+  }
+
+  :where(.cpu-explorer) .part-select.active {
+    border-color: color-mix(in srgb, var(--part-color), transparent 52%);
+    background: color-mix(in srgb, var(--part-color), transparent 88%);
+  }
+
+  :where(.cpu-explorer) .part-number {
+    align-self: start;
+    padding-top: 7px;
+    color: var(--text-soft);
+    font: 500 0.56rem var(--font-mono);
+  }
+
+  :where(.cpu-explorer) .part-select-copy {
+    min-width: 0;
+  }
+
+  :where(.cpu-explorer) .part-select-copy strong {
+    display: block;
+    overflow: hidden;
+    font: 600 0.78rem var(--font-sans);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.cpu-explorer) .part-select-copy small {
+    display: block;
+    margin-top: 5px;
+    overflow: hidden;
+    color: var(--text-soft);
+    font: 400 0.6rem var(--font-mono);
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  :where(.cpu-explorer) .part-abbr {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--part-color), transparent 55%);
+    border-radius: 9px;
+    color: var(--part-color);
+    font: 600 0.55rem var(--font-mono);
+  }
+
+  :where(.cpu-explorer) .part-select.active .part-abbr {
+    background: var(--part-color);
+    color: #fff;
+  }
+
+  :where(.cpu-explorer) .scale-note {
+    border-top: 1px solid var(--border);
+    padding-top: 15px;
+  }
+
+  :where(.cpu-explorer) .scale-note > span {
+    color: var(--text-soft);
+    font: 500 0.55rem var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .scale-note p {
+    margin: 10px 0 0;
+    color: var(--text-soft);
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  :where(.cpu-explorer) .scale-note b {
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  :where(.cpu-explorer) .scale-track {
+    margin-top: 9px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+
+  :where(.cpu-explorer) .scale-track i {
+    height: 3px;
+    border-radius: 999px;
+    background: var(--accent);
+    opacity: 0.24;
+  }
+
+  :where(.cpu-explorer) .scale-track i:nth-child(2) { opacity: 0.38; }
+  :where(.cpu-explorer) .scale-track i:nth-child(3) { opacity: 0.55; }
+  :where(.cpu-explorer) .scale-track i:nth-child(4) { opacity: 0.72; }
+  :where(.cpu-explorer) .scale-track i:nth-child(5) { opacity: 1; }
+
+  :where(.cpu-explorer) .cpu-stage {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    background:
+      radial-gradient(circle at 54% 44%, color-mix(in srgb, var(--accent), transparent 93%), transparent 44%),
+      color-mix(in srgb, var(--bg), transparent 28%);
+  }
+
+  :where(.cpu-explorer) .stage-header {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 18px;
+  }
+
+  :where(.cpu-explorer) .stage-readout {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :where(.cpu-explorer) .stage-readout span,
+  :where(.cpu-explorer) .stage-legend {
+    color: var(--text-soft);
+    font: 500 0.56rem var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .stage-readout strong {
+    margin-top: 5px;
+    overflow: hidden;
+    font-size: 0.77rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.cpu-explorer) .stage-legend {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  :where(.cpu-explorer) .stage-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  :where(.cpu-explorer) .stage-legend i {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  :where(.cpu-explorer) .cpu-canvas {
+    position: relative;
+    min-height: 500px;
+    overflow: hidden;
+  }
+
+  :where(.cpu-explorer) .cpu-map {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    display: block;
+  }
+
+  :where(.cpu-explorer) .canvas-coordinate {
+    position: absolute;
+    z-index: 2;
+    color: var(--text-soft);
+    font: 500 0.5rem var(--font-mono);
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  :where(.cpu-explorer) .canvas-coordinate-x {
+    left: 18px;
+    bottom: 15px;
+  }
+
+  :where(.cpu-explorer) .canvas-coordinate-y {
+    top: 18px;
+    left: 15px;
+    writing-mode: vertical-rl;
+  }
+
+  :where(.cpu-explorer) .map-grid-line {
+    fill: none;
+    stroke: var(--grid);
+    stroke-width: 1;
+  }
+
+  :where(.cpu-explorer) .map-grid {
+    opacity: 0.7;
+  }
+
+  :where(.cpu-explorer) .board-traces {
+    fill: none;
+    stroke: color-mix(in srgb, var(--accent), transparent 68%);
+    stroke-width: 2;
+  }
+
+  :where(.cpu-explorer) .board-traces circle {
+    fill: var(--accent);
+    stroke: none;
+  }
+
+  :where(.cpu-explorer) .chip-pins rect {
+    fill: var(--pin);
+    opacity: 0.82;
+  }
+
+  :where(.cpu-explorer) .chip-package-shadow {
+    fill: color-mix(in srgb, var(--text), transparent 75%);
+  }
+
+  :where(.cpu-explorer) .chip-package {
+    fill: var(--package);
+    stroke: var(--package-edge);
+    stroke-width: 2;
+  }
+
+  :where(.cpu-explorer) .chip-corner {
+    fill: var(--package-edge);
+    opacity: 0.72;
+  }
+
+  :where(.cpu-explorer) .chip-die {
+    fill: var(--die);
+    stroke: color-mix(in srgb, var(--package-edge), transparent 12%);
+    stroke-width: 1.5;
+  }
+
+  :where(.cpu-explorer) .die-labels {
+    fill: none;
+    stroke: var(--text-soft);
+    stroke-width: 1;
+    opacity: 0.48;
+  }
+
+  :where(.cpu-explorer) .die-labels text {
+    fill: var(--text-soft);
+    stroke: none;
+    font: 500 9px var(--font-mono);
+    letter-spacing: 0.08em;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape {
+    cursor: pointer;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape .part-hit {
+    fill: transparent;
+    stroke: transparent;
+    stroke-width: 14;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape .part-block {
+    fill: color-mix(in srgb, var(--part-color), var(--die) 88%);
+    stroke: color-mix(in srgb, var(--part-color), transparent 48%);
+    stroke-width: 1.5;
+    transition: fill 180ms ease, stroke-width 180ms ease, filter 180ms ease;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape:hover .part-block,
+  :where(.cpu-explorer) .cpu-part-shape:focus .part-block,
+  :where(.cpu-explorer) .cpu-part-shape.active .part-block {
+    fill: color-mix(in srgb, var(--part-color), var(--die) 72%);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--part-color), transparent 55%));
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape .part-detail,
+  :where(.cpu-explorer) .clock-wave,
+  :where(.cpu-explorer) .bus-line {
+    fill: none;
+    stroke: var(--part-color);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+    opacity: 0.75;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape .part-node,
+  :where(.cpu-explorer) .bus-node {
+    fill: color-mix(in srgb, var(--part-color), var(--die) 35%);
+    stroke: var(--part-color);
+    stroke-width: 2;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape .part-code,
+  :where(.cpu-explorer) .cpu-part-shape .part-name,
+  :where(.cpu-explorer) .bus-label {
+    fill: var(--text);
+    font-family: var(--font-mono);
+    pointer-events: none;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape .part-code {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  :where(.cpu-explorer) .cpu-part-shape .part-name {
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  :where(.cpu-explorer) .register-bits rect,
+  :where(.cpu-explorer) .cache-cells rect {
+    fill: color-mix(in srgb, var(--part-color), transparent 72%);
+    stroke: var(--part-color);
+    stroke-width: 0.8;
+  }
+
+  :where(.cpu-explorer) .bus-shape .part-hit {
+    stroke-width: 22;
+  }
+
+  :where(.cpu-explorer) .bus-label {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  :where(.cpu-explorer) .memory-port rect {
+    fill: var(--code-bg);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  :where(.cpu-explorer) .memory-port text {
+    fill: var(--text-soft);
+    font: 600 10px var(--font-mono);
+    letter-spacing: 0.12em;
+  }
+
+  :where(.cpu-explorer) .memory-port path {
+    fill: none;
+    stroke: var(--text-soft);
+    stroke-width: 1.5;
+    opacity: 0.6;
+  }
+
+  :where(.cpu-explorer) .memory-port circle {
+    fill: var(--accent);
+  }
+
+  :where(.cpu-explorer) .signal-path,
+  :where(.cpu-explorer) .signal-pulse {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  :where(.cpu-explorer) .signal-path {
+    fill: none;
+    stroke: var(--signal);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 10 9;
+    filter: drop-shadow(0 0 5px color-mix(in srgb, var(--signal), transparent 28%));
+    animation: signal-flow 700ms linear infinite;
+  }
+
+  :where(.cpu-explorer) .signal-pulse {
+    fill: var(--signal);
+    filter: drop-shadow(0 0 7px var(--signal));
+  }
+
+  :where(.cpu-explorer) .cpu-workbench[data-phase="fetch"] .signal-fetch,
+  :where(.cpu-explorer) .cpu-workbench[data-phase="decode"] .signal-decode,
+  :where(.cpu-explorer) .cpu-workbench[data-phase="execute"] .signal-execute {
+    opacity: 1;
+  }
+
+  @keyframes signal-flow {
+    to { stroke-dashoffset: -19; }
+  }
+
+  :where(.cpu-explorer) .canvas-tip {
+    position: absolute;
+    z-index: 3;
+    top: 24px;
+    right: 20px;
+    width: 148px;
+    transform: rotate(2deg);
+    border: 1px solid color-mix(in srgb, var(--signal), transparent 46%);
+    background: var(--note-bg);
+    box-shadow: 0 11px 25px rgba(0, 0, 0, 0.12);
+    color: color-mix(in srgb, var(--text), #141414 10%);
+    padding: 12px 13px;
+  }
+
+  :where(.cpu-explorer) .canvas-tip::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 50px;
+    height: 10px;
+    transform: translateX(-50%) rotate(-1deg);
+    background: color-mix(in srgb, var(--bg-elev), transparent 42%);
+  }
+
+  :where(.cpu-explorer) .canvas-tip span {
+    color: var(--accent-2);
+    font: 600 0.54rem var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .canvas-tip p {
+    margin: 7px 0 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  :where(.cpu-explorer) .cycle-console {
+    min-height: 96px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    background: color-mix(in srgb, var(--bg-elev), transparent 32%);
+  }
+
+  :where(.cpu-explorer) .phase-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  :where(.cpu-explorer) .phase-selector button {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    background: transparent;
+    color: var(--text);
+    padding: 8px 10px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  :where(.cpu-explorer) .phase-selector button:hover,
+  :where(.cpu-explorer) .phase-selector button.active {
+    border-color: var(--border);
+    background: var(--code-bg);
+  }
+
+  :where(.cpu-explorer) .phase-selector button.active {
+    box-shadow: inset 3px 0 0 var(--signal);
+  }
+
+  :where(.cpu-explorer) .phase-selector button > span {
+    grid-row: 1 / 3;
+    color: var(--text-soft);
+    font: 500 0.54rem var(--font-mono);
+  }
+
+  :where(.cpu-explorer) .phase-selector strong {
+    overflow: hidden;
+    font: 600 0.7rem var(--font-mono);
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .phase-selector small {
+    margin-top: 2px;
+    color: var(--text-soft);
+    font: 400 0.58rem var(--font-sans);
+  }
+
+  :where(.cpu-explorer) .cycle-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  :where(.cpu-explorer) .cycle-actions button {
+    min-height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    padding: 0 12px;
+    font: 600 0.64rem var(--font-sans);
+    cursor: pointer;
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  }
+
+  :where(.cpu-explorer) .cycle-actions button:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+  }
+
+  :where(.cpu-explorer) .cycle-actions .cycle-step {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--bg-elev);
+  }
+
+  :where(.cpu-explorer) .cycle-step span {
+    margin-left: 8px;
+  }
+
+  :where(.cpu-explorer) .cycle-auto {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  :where(.cpu-explorer) .cycle-auto[aria-pressed="true"] {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  :where(.cpu-explorer) .cycle-actions .cycle-reset {
+    width: 40px;
+    padding: 0;
+    font-size: 1rem;
+  }
+
+  :where(.cpu-explorer) .part-dossier {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .dossier-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .dossier-symbol {
+    position: relative;
+    width: 78px;
+    height: 78px;
+    margin-top: 26px;
+    display: grid;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--part-color), transparent 40%);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--part-color), transparent 88%);
+    color: var(--part-color);
+    font: 600 1rem var(--font-mono);
+  }
+
+  :where(.cpu-explorer) .dossier-symbol i {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--part-color);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--part-color), transparent 76%);
+  }
+
+  :where(.cpu-explorer) .dossier-category {
+    margin: 22px 0 0;
+    color: var(--accent);
+  }
+
+  :where(.cpu-explorer) .part-dossier h2 {
+    margin: 8px 0 0;
+    font: 400 clamp(1.65rem, 2.2vw, 2.35rem) / 1 var(--font-display);
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .dossier-tagline {
+    margin: 12px 0 0;
+    color: var(--accent-2);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  :where(.cpu-explorer) .dossier-description {
+    margin: 16px 0 0;
+    color: var(--text-soft);
+    font-size: 0.78rem;
+    line-height: 1.65;
+  }
+
+  :where(.cpu-explorer) .dossier-facts {
+    margin: 22px 0 0;
+    border-top: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .dossier-facts div {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .dossier-facts dt {
+    color: var(--text-soft);
+    font: 500 0.55rem var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .dossier-facts dd {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  :where(.cpu-explorer) .signal-note {
+    margin-top: 18px;
+    border-left: 2px solid var(--signal);
+    background: color-mix(in srgb, var(--signal), transparent 91%);
+    padding: 12px 13px;
+  }
+
+  :where(.cpu-explorer) .signal-note > span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--signal);
+    font: 600 0.55rem var(--font-mono);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  :where(.cpu-explorer) .signal-note > span i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  :where(.cpu-explorer) .signal-note p {
+    margin: 7px 0 0;
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  :where(.cpu-explorer) .dossier-link {
+    min-height: 44px;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    padding: 0 13px;
+    font: 600 0.67rem var(--font-sans);
+    text-decoration: none;
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  :where(.cpu-explorer) .dossier-link:hover {
+    background: var(--accent);
+    color: var(--bg-elev);
+  }
+
+  :where(.cpu-explorer) .explorer-disclaimer {
+    margin: 16px 4px 0 auto;
+    max-width: 740px;
+    color: var(--text-soft);
+    font: 400 0.68rem / 1.55 var(--font-mono);
+    text-align: right;
+  }
+
+  :where(.cpu-explorer) .explorer-disclaimer span {
+    margin-right: 8px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+}
+
+@media (max-width: 1320px) {
+  :where(.cpu-explorer) .cpu-workbench {
+    grid-template-columns: 235px minmax(500px, 1fr) 300px;
+  }
+
+  :where(.cpu-explorer) .parts-panel,
+  :where(.cpu-explorer) .part-dossier {
+    padding: 17px;
+  }
+
+  :where(.cpu-explorer) .part-select {
+    grid-template-columns: 22px minmax(0, 1fr) 31px;
+    gap: 7px;
+    padding-inline: 6px;
+  }
+}
+
+@media (max-width: 1120px) {
+  :where(.cpu-explorer) .cpu-workbench {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+
+  :where(.cpu-explorer) .part-dossier {
+    grid-column: 1 / -1;
+    min-height: 330px;
+    display: grid;
+    grid-template-columns: 100px minmax(220px, 0.8fr) minmax(280px, 1.2fr);
+    grid-template-rows: auto auto auto 1fr;
+    column-gap: 24px;
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  :where(.cpu-explorer) .dossier-topline {
+    grid-column: 1 / -1;
+  }
+
+  :where(.cpu-explorer) .dossier-symbol {
+    grid-column: 1;
+    grid-row: 2 / 5;
+  }
+
+  :where(.cpu-explorer) .dossier-category,
+  :where(.cpu-explorer) .part-dossier h2,
+  :where(.cpu-explorer) .dossier-tagline {
+    grid-column: 2;
+  }
+
+  :where(.cpu-explorer) .dossier-description,
+  :where(.cpu-explorer) .dossier-facts,
+  :where(.cpu-explorer) .signal-note,
+  :where(.cpu-explorer) .dossier-link {
+    grid-column: 3;
+  }
+
+  :where(.cpu-explorer) .dossier-description {
+    grid-row: 2;
+    margin-top: 22px;
+  }
+
+  :where(.cpu-explorer) .dossier-facts {
+    grid-row: 3;
+    margin-top: 14px;
+  }
+
+  :where(.cpu-explorer) .signal-note {
+    grid-row: 4;
+    align-self: start;
+  }
+
+  :where(.cpu-explorer) .dossier-link {
+    grid-column: 2;
+    grid-row: 4;
+    align-self: end;
+  }
+}
+
+@media (max-width: 820px) {
+
+  :where(.cpu-explorer) .explorer-masthead {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  :where(.cpu-explorer) .explorer-masthead h1 {
+    font-size: clamp(2.75rem, 13vw, 5.4rem);
+  }
+
+  :where(.cpu-explorer) .cpu-workbench {
+    display: flex;
+    flex-direction: column;
+  }
+
+  :where(.cpu-explorer) .parts-panel {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .parts-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  :where(.cpu-explorer) .part-select {
+    min-height: 66px;
+  }
+
+  :where(.cpu-explorer) .scale-note {
+    display: none;
+  }
+
+  :where(.cpu-explorer) .cpu-stage {
+    min-height: 650px;
+  }
+
+  :where(.cpu-explorer) .part-dossier {
+    min-height: auto;
+    display: flex;
+    border-top: 1px solid var(--border);
+  }
+
+  :where(.cpu-explorer) .dossier-description,
+  :where(.cpu-explorer) .dossier-facts,
+  :where(.cpu-explorer) .signal-note,
+  :where(.cpu-explorer) .dossier-link {
+    width: 100%;
+  }
+
+  :where(.cpu-explorer) .dossier-link {
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 620px) {
+
+  .cpu-explorer {
+    width: min(100% - 22px, 1560px);
+  }
+
+  :where(.cpu-explorer) .explorer-meta span {
+    font-size: 0.56rem;
+  }
+
+  :where(.cpu-explorer) .cpu-workbench {
+    border-radius: 20px;
+  }
+
+  :where(.cpu-explorer) .parts-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  :where(.cpu-explorer) .part-number {
+    display: none;
+  }
+
+  :where(.cpu-explorer) .part-select {
+    grid-template-columns: minmax(0, 1fr) 32px;
+  }
+
+  :where(.cpu-explorer) .stage-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  :where(.cpu-explorer) .stage-legend {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  :where(.cpu-explorer) .cpu-canvas,
+  :where(.cpu-explorer) .cpu-map {
+    min-height: 400px;
+  }
+
+  :where(.cpu-explorer) .cpu-map {
+    transform: scale(1.12);
+  }
+
+  :where(.cpu-explorer) .canvas-tip {
+    display: none;
+  }
+
+  :where(.cpu-explorer) .cycle-console {
+    grid-template-columns: 1fr;
+  }
+
+  :where(.cpu-explorer) .cycle-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 40px;
+  }
+
+  :where(.cpu-explorer) .phase-selector button {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  :where(.cpu-explorer) .phase-selector button > span {
+    grid-row: auto;
+  }
+
+  :where(.cpu-explorer) .phase-selector small {
+    display: none;
+  }
+}
+
+:where(.cpu-explorer) :is(button, a, [role="button"]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+:where(.cpu-explorer) .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.cpu-explorer) *,
+  :where(.cpu-explorer) *::before,
+  :where(.cpu-explorer) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  :where(.cpu-explorer) .signal-pulse {
+    display: none;
+  }
+}
