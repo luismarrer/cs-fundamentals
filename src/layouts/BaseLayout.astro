@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const isCpuChapter = Astro.url.pathname.replace(/\/$/, '') === '/capitulos/05-la-cpu';
 ---
 
 <!doctype html>
@@ -16,30 +17,58 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#101922" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1f4f7" media="(prefers-color-scheme: light)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='15' y='15' width='70' height='70' rx='14' fill='%233159d8'/><path d='M32 32h36v36H32zM8 30h14M8 50h14M8 70h14M78 30h14M78 50h14M78 70h14M30 8v14M50 8v14M70 8v14M30 78v14M50 78v14M70 78v14' fill='none' stroke='%23ffffff' stroke-width='6'/></svg>"
     />
   </head>
   <body class="bg-bg font-sans leading-relaxed text-ink antialiased">
-    <header class="sticky top-0 z-10 border-b border-line bg-bg/80 backdrop-blur-md">
-      <div class="mx-auto flex max-w-[920px] items-center justify-between gap-4 px-5 py-3">
-        <a class="whitespace-nowrap font-bold tracking-tight" href="/">
-          <span class="text-accent">⚡</span> Fundamentos de Computación
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="site-brand" href="/" aria-label="CPU abierta, página principal">
+          <span class="brand-chip" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 7h10v10H7zM10 10h4v4h-4z" stroke="currentColor" stroke-width="1.5"></path>
+            </svg>
+          </span>
+          <span class="site-brand-copy">
+            <strong>CPU abierta</strong>
+            <small>Fundamentos de computación</small>
+          </span>
         </a>
-        <nav class="flex flex-wrap gap-4 text-sm">
-          <a class="text-soft transition-colors hover:text-accent" href="/#curso">El curso</a>
-          <a class="text-soft transition-colors hover:text-accent" href="/#proyectos">Proyectos</a>
+        <nav class="site-nav" aria-label="Navegación principal">
+          <a href="/#explorar">Explorar</a>
+          <a href="/#recorrido">Recorrido</a>
+          <a href="/#proyectos">Proyectos</a>
         </nav>
+        <a class="header-simulator" href="/capitulos/05-la-cpu" aria-current={isCpuChapter ? 'page' : undefined}>
+          <span>05</span>
+          Simulador CPU
+        </a>
       </div>
     </header>
 
-    <slot />
+    <div id="contenido" tabindex="-1"><slot /></div>
 
-    <footer class="mt-12 border-t border-line py-9 text-center text-sm text-soft">
-      <div class="mx-auto max-w-[920px] px-5">
-        Hecho con curiosidad por <a class="text-accent" href="https://github.com/luismarrer" target="_blank" rel="noopener">Luis Marrero</a> · Fundamentos de Computación · <a class="text-accent" href="https://github.com/luismarrer/cs-fundamentals" target="_blank" rel="noopener">Repositorio</a>
+    <footer class="site-footer">
+      <div>
+        <strong>CPU abierta</strong>
+        <p>Del transistor a la instrucción, explicado pieza por pieza.</p>
       </div>
+      <nav class="footer-links" aria-label="Enlaces del proyecto">
+        <a href="/#recorrido">Curso</a>
+        <a href="https://github.com/luismarrer" target="_blank" rel="noopener">Luis Marrero ↗</a>
+        <a href="https://github.com/luismarrer/cs-fundamentals" target="_blank" rel="noopener">Código fuente ↗</a>
+      </nav>
     </footer>
   </body>
 </html>
