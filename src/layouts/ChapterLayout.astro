@@ -24,7 +24,7 @@ const chapterProgress = `${Math.round((chapterNumber / 5) * 100)}%`;
 <BaseLayout title={title} description={description}>
   <main class="chapter-shell">
     <header class="chapter-hero">
-      <div class="chapter-index" style={`--chapter-progress: ${chapterProgress}`}>
+      <div class="chapter-index" style={`--chapter-progress: ${chapterProgress}`} role="img" aria-label={`Capítulo ${chapterNumber} de 5, progreso ${chapterProgress}`}>
         <strong>{chapterLabel}</strong>
         <i aria-hidden="true"></i>
         <span>05</span>
@@ -42,8 +42,8 @@ const chapterProgress = `${Math.round((chapterNumber / 5) * 100)}%`;
       <nav class="chapter-pager" aria-label="Navegación entre capítulos">
         {
           prev ? (
-            <a href={prev.href}>
-              <span>Anterior</span>
+            <a href={prev.href} rel="prev">
+              <span>Capítulo anterior</span>
               <strong>← {prev.label}</strong>
             </a>
           ) : (
@@ -52,8 +52,8 @@ const chapterProgress = `${Math.round((chapterNumber / 5) * 100)}%`;
         }
         {
           next ? (
-            <a href={next.href}>
-              <span>Siguiente</span>
+            <a href={next.href} rel="next">
+              <span>Siguiente capítulo</span>
               <strong>{next.label} →</strong>
             </a>
           ) : (

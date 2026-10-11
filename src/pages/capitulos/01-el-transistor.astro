@@ -84,32 +84,52 @@ import ChapterLayout from '../../layouts/ChapterLayout.astro';
       Pulsa el botón de la puerta (Gate) y observa cómo se forma el canal y circula la corriente.
     </p>
     <figure>
-      <svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" aria-label="Diagrama interactivo de un MOSFET">
-        <rect x="60" y="120" width="440" height="110" rx="8" fill="#f4c9c9" opacity="0.55"></rect>
-        <text x="280" y="215" text-anchor="middle" font-size="14" fill="#a15555">sustrato tipo P</text>
-        <rect x="80" y="120" width="90" height="55" rx="6" fill="#b9d7f5"></rect>
-        <text x="125" y="152" text-anchor="middle" font-size="13" fill="#3a6ea8">N</text>
-        <rect x="390" y="120" width="90" height="55" rx="6" fill="#b9d7f5"></rect>
-        <text x="435" y="152" text-anchor="middle" font-size="13" fill="#3a6ea8">N</text>
-        <rect x="180" y="108" width="200" height="12" fill="#d9d9d9"></rect>
-        <rect x="200" y="80" width="160" height="26" rx="5" id="gate-plate" fill="#9aa5b5"></rect>
-        <text x="280" y="98" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">GATE</text>
-        <rect x="170" y="120" width="220" height="16" rx="6" id="channel" fill="#4f8fe0" opacity="0"></rect>
-        <text x="125" y="110" text-anchor="middle" font-size="13" fill="currentColor">Fuente</text>
-        <text x="435" y="110" text-anchor="middle" font-size="13" fill="currentColor">Drenador</text>
+      <svg id="mosfet-svg" viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" aria-label="Diagrama interactivo de un MOSFET" class="mosfet-diagram">
+        <!-- Sustrato tipo P -->
+        <rect x="60" y="120" width="440" height="110" rx="8" class="mosfet-substrate" stroke-width="1.5"></rect>
+        <text x="280" y="215" text-anchor="middle" font-size="14" class="mosfet-substrate-text" font-weight="600">sustrato tipo P</text>
+
+        <!-- Pozos tipo N (Fuente y Drenador) -->
+        <rect x="80" y="120" width="90" height="55" rx="6" class="mosfet-well" stroke-width="1.5"></rect>
+        <text x="125" y="154" text-anchor="middle" font-size="15" class="mosfet-well-text" font-weight="700">N</text>
+
+        <rect x="390" y="120" width="90" height="55" rx="6" class="mosfet-well" stroke-width="1.5"></rect>
+        <text x="435" y="154" text-anchor="middle" font-size="15" class="mosfet-well-text" font-weight="700">N</text>
+
+        <!-- Capa de óxido aislante (SiO2) -->
+        <rect x="180" y="108" width="200" height="12" rx="2" class="mosfet-oxide" stroke-width="1"></rect>
+        <text x="280" y="117" text-anchor="middle" font-size="9" fill="var(--text-soft)" letter-spacing="0.08em">ÓXIDO AISLANTE (SiO₂)</text>
+
+        <!-- Puerta metálica (GATE) -->
+        <rect x="200" y="78" width="160" height="28" rx="5" id="gate-plate" class="mosfet-gate" fill="var(--mosfet-gate-off)" stroke="var(--border)" stroke-width="1.5"></rect>
+        <text x="280" y="97" text-anchor="middle" font-size="13" class="mosfet-gate-text" fill="var(--accent-contrast)" font-weight="700" letter-spacing="0.06em">GATE</text>
+
+        <!-- Canal inducido -->
+        <rect x="170" y="120" width="220" height="16" rx="6" id="channel" class="mosfet-channel" fill="var(--accent)" opacity="0"></rect>
+
+        <!-- Etiquetas Fuente y Drenador -->
+        <text x="125" y="108" text-anchor="middle" font-size="13" fill="var(--text-soft)" font-weight="500">Fuente</text>
+        <text x="435" y="108" text-anchor="middle" font-size="13" fill="var(--text-soft)" font-weight="500">Drenador</text>
+
+        <!-- Electrones en tránsito -->
         <g id="electrons" opacity="0">
-          <circle r="5" fill="#2563eb"><animate attributeName="cx" from="130" to="430" dur="1.2s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" repeatCount="indefinite"></animate></circle>
-          <circle r="5" fill="#2563eb"><animate attributeName="cx" from="130" to="430" dur="1.2s" begin="0.4s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" begin="0.4s" repeatCount="indefinite"></animate></circle>
-          <circle r="5" fill="#2563eb"><animate attributeName="cx" from="130" to="430" dur="1.2s" begin="0.8s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" begin="0.8s" repeatCount="indefinite"></animate></circle>
+          <circle r="5" fill="var(--accent)"><animate attributeName="cx" from="130" to="430" dur="1.2s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" repeatCount="indefinite"></animate></circle>
+          <circle r="5" fill="var(--accent)"><animate attributeName="cx" from="130" to="430" dur="1.2s" begin="0.4s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" begin="0.4s" repeatCount="indefinite"></animate></circle>
+          <circle r="5" fill="var(--accent)"><animate attributeName="cx" from="130" to="430" dur="1.2s" begin="0.8s" repeatCount="indefinite"></animate><animate attributeName="cy" from="128" to="128" dur="1.2s" begin="0.8s" repeatCount="indefinite"></animate></circle>
         </g>
-        <circle cx="520" cy="60" r="18" id="bulb" fill="#d0d5de" stroke="#9aa5b5" stroke-width="2"></circle>
-        <text x="520" y="100" text-anchor="middle" font-size="12" fill="currentColor">salida</text>
-        <path d="M 435 120 L 435 60 L 502 60" fill="none" stroke="#9aa5b5" stroke-width="2.5"></path>
+
+        <!-- Bombilla (salida) -->
+        <circle cx="520" cy="60" r="18" id="bulb" class="mosfet-bulb" fill="var(--mosfet-bulb-off)" stroke="var(--border)" stroke-width="2"></circle>
+        <path id="bulb-filament" d="M 515 63 L 520 54 L 525 63" fill="none" stroke="var(--border)" stroke-width="1.5" stroke-linecap="round"></path>
+        <text x="520" y="98" text-anchor="middle" font-size="12" fill="var(--text-soft)">salida</text>
+
+        <!-- Conductor eléctrico entre Drenador y Bombilla -->
+        <path id="mosfet-wire" class="mosfet-wire" d="M 435 120 L 435 60 L 502 60" fill="none" stroke="var(--border)" stroke-width="2.5" stroke-linecap="round"></path>
       </svg>
     </figure>
     <div class="demo-row">
       <span class="demo-label">Voltaje en la puerta:</span>
-      <button class="bit" id="gate-btn" aria-pressed="false">0</button>
+      <button class="bit" id="gate-btn" aria-pressed="false" aria-label="Conmutar voltaje en la puerta">0</button>
       <span class="readout" id="mosfet-state"><span class="off">canal cerrado — no circula corriente</span></span>
     </div>
   </div>
@@ -144,23 +164,120 @@ import ChapterLayout from '../../layouts/ChapterLayout.astro';
 </ChapterLayout>
 
 <script>
-  const gateBtn = document.getElementById('gate-btn')!;
-  const channel = document.getElementById('channel')!;
-  const electrons = document.getElementById('electrons')!;
-  const bulb = document.getElementById('bulb')!;
-  const gatePlate = document.getElementById('gate-plate')!;
-  const state = document.getElementById('mosfet-state')!;
+  const svg = document.getElementById('mosfet-svg') as (SVGSVGElement & { pauseAnimations?: () => void; unpauseAnimations?: () => void; animationsPaused?: () => boolean }) | null;
+  const gateBtn = document.getElementById('gate-btn');
+  const channel = document.getElementById('channel');
+  const electrons = document.getElementById('electrons');
+  const bulb = document.getElementById('bulb');
+  const bulbFilament = document.getElementById('bulb-filament');
+  const gatePlate = document.getElementById('gate-plate');
+  const wire = document.getElementById('mosfet-wire');
+  const state = document.getElementById('mosfet-state');
 
-  gateBtn.addEventListener('click', () => {
-    const on = gateBtn.getAttribute('aria-pressed') !== 'true';
-    gateBtn.setAttribute('aria-pressed', String(on));
-    gateBtn.textContent = on ? '1' : '0';
-    channel.style.opacity = on ? '0.85' : '0';
-    electrons.style.opacity = on ? '1' : '0';
-    bulb.setAttribute('fill', on ? '#fbbf24' : '#d0d5de');
-    gatePlate.setAttribute('fill', on ? '#2563eb' : '#9aa5b5');
-    state.innerHTML = on
+  let isOn = false;
+  let isPageActive = true;
+  let isDocVisible = !document.hidden;
+
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let isReducedMotion = motionQuery.matches;
+
+  function setSvgAnimationsPaused(paused: boolean) {
+    if (!svg) return;
+    try {
+      if (paused) {
+        if (typeof svg.pauseAnimations === 'function') {
+          const isPaused = typeof svg.animationsPaused === 'function' ? svg.animationsPaused() : false;
+          if (!isPaused) {
+            svg.pauseAnimations();
+          }
+        }
+      } else {
+        if (typeof svg.unpauseAnimations === 'function') {
+          const isPaused = typeof svg.animationsPaused === 'function' ? svg.animationsPaused() : true;
+          if (isPaused) {
+            svg.unpauseAnimations();
+          }
+        }
+      }
+    } catch {
+      // Graceful fallback if SMIL manipulation is unsupported
+    }
+  }
+
+  function updateMotion() {
+    const shouldAnimate = isOn && !isReducedMotion && isDocVisible && isPageActive;
+    setSvgAnimationsPaused(!shouldAnimate);
+  }
+
+  function syncVisuals() {
+    if (!gateBtn || !channel || !electrons || !bulb || !gatePlate || !state) return;
+
+    gateBtn.setAttribute('aria-pressed', String(isOn));
+    gateBtn.textContent = isOn ? '1' : '0';
+
+    channel.style.opacity = isOn ? '0.85' : '0';
+    electrons.style.opacity = isOn ? '1' : '0';
+
+    gatePlate.setAttribute('fill', isOn ? 'var(--accent)' : 'var(--mosfet-gate-off)');
+    gatePlate.setAttribute('stroke', isOn ? 'var(--accent)' : 'var(--border)');
+
+    bulb.setAttribute('fill', isOn ? 'var(--mosfet-bulb-on)' : 'var(--mosfet-bulb-off)');
+    bulb.setAttribute('stroke', isOn ? 'var(--mosfet-bulb-on)' : 'var(--border)');
+
+    if (bulbFilament) {
+      bulbFilament.setAttribute('stroke', isOn ? 'var(--accent-contrast)' : 'var(--border)');
+    }
+
+    if (wire) {
+      wire.setAttribute('stroke', isOn ? 'var(--accent)' : 'var(--border)');
+    }
+
+    state.innerHTML = isOn
       ? '<span class="on">canal formado — ¡circula corriente!</span>'
       : '<span class="off">canal cerrado — no circula corriente</span>';
+
+    updateMotion();
+  }
+
+  if (gateBtn) {
+    gateBtn.addEventListener('click', () => {
+      isOn = !isOn;
+      syncVisuals();
+    });
+  }
+
+  const handleMotionChange = (e: MediaQueryListEvent) => {
+    isReducedMotion = e.matches;
+    updateMotion();
+  };
+
+  if (typeof motionQuery.addEventListener === 'function') {
+    motionQuery.addEventListener('change', handleMotionChange);
+  } else if ('addListener' in motionQuery) {
+    (motionQuery as { addListener: (cb: (e: MediaQueryListEvent) => void) => void }).addListener(handleMotionChange);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    isDocVisible = !document.hidden;
+    updateMotion();
   });
+
+  window.addEventListener('pagehide', () => {
+    isPageActive = false;
+    updateMotion();
+  });
+
+  window.addEventListener('pageshow', () => {
+    isPageActive = true;
+    isDocVisible = !document.hidden;
+    updateMotion();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    isPageActive = false;
+    updateMotion();
+  });
+
+  // Initial state: gate 0, animations paused
+  syncVisuals();
 </script>

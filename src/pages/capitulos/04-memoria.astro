@@ -41,8 +41,8 @@ import ChapterLayout from '../../layouts/ChapterLayout.astro';
       recordando.
     </p>
     <div class="demo-row">
-      <button class="action action-primary" id="btn-set">Pulso SET</button>
-      <button class="action" id="btn-reset">Pulso RESET</button>
+      <button class="action action-primary" id="btn-set" aria-label="Enviar pulso SET para almacenar 1">Pulso SET</button>
+      <button class="action" id="btn-reset" aria-label="Enviar pulso RESET para almacenar 0">Pulso RESET</button>
       <span class="readout">Q = <span id="latch-q" class="off">0</span></span>
       <span class="readout" id="latch-msg"><span class="off">estado inicial</span></span>
     </div>

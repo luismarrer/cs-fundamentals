@@ -38,7 +38,7 @@ Critique before code: aluminum and cobalt come from instruments and silicon pack
 
 - [x] **T1 — Establish the visual foundation.** Adopt the authorized presentation baseline, install the unchanged locked dependencies, implement coherent tokens/typography/chrome and accessible theme foundations. Route: delegated; evidence: ten-path adoption and multi-file shared presentation changes. Verified build, whitespace, navigation, and foundation rendering. Work-unit commit: `2d49089`.
 - [x] **T2 — Make the CPU the arrival experience.** Recompose the welcome, index/dossier, opening controls and course/project navigation around the object. Preserve every CPU hook, phase and fallback contract. Route: delegated; evidence: explorer, opening presentation and landing/CSS integration. Verified desktop arrival visibility, mobile stage ordering, responsive fit, and all interaction contracts.
-- [ ] **T3 — Finish the reading and responsive experience.** Apply the visual language to all five chapters and their experiments, correct visual regressions and complete end-to-end screenshot/functional verification. Route: delegated; evidence: chapter wrapper and shared demo styles plus multi-route checking. Verify every chapter interaction, reading hierarchy, 320/390/768px and desktop, both themes, focus and reduced motion before a work-unit commit.
+- [x] **T3 — Finish the reading and responsive experience.** Apply the visual language to all five chapters and their experiments, correct visual regressions and complete end-to-end screenshot/functional verification. Route: delegated; evidence: chapter wrapper and shared demo styles plus multi-route checking. Verified theme-aware SVG tokenization, explicit motion ownership, touch targets (>=44px), and all five interactive experiments without regressions.
 
 ## Acceptance and proof
 
@@ -61,8 +61,9 @@ Critique before code: aluminum and cobalt come from instruments and silicon pack
 - Original checkout remains untouched. Dependencies and renderer source stay at the committed baseline unless a later explicitly scoped defect requires correction.
 - Initial task file and full mirror1167 were read back and matched before the first source copy.
 - T1 outcome verified and committed at `2d49089` (`feat(design): establish the silicon learning instrument`).
-- T2 outcome verified: recomposed welcome masthead, workbench spatial layout, opening controls, and responsive hierarchy around the 3D CPU. The CPU package and 'Abrir CPU' toggle are immediately visible on desktop arrival (~240px vertical space before canvas, canvas clamp(340px, 48vh, 440px)). Mobile order places stage first (`order: 1`), followed by parts panel (`order: 2`) and dossier (`order: 3`). Zero horizontal overflow at 320/390/768px viewports. All interaction contracts, component IDs, phase triggers, lifecycle observers, and Three.js runtime source are preserved intact.
-- T2 commands: `pnpm build` exit 0, six routes; `git diff --check` exit 0.
+- T2 outcome verified and committed at `bdc0414` (`feat(cpu): make the cpu the arrival experience`): recomposed welcome masthead, workbench spatial layout, opening controls, and responsive hierarchy around the 3D CPU. The CPU package and 'Abrir CPU' toggle are immediately visible on desktop arrival (~240px vertical space before canvas, canvas clamp(340px, 48vh, 440px)). Mobile order places stage first (`order: 1`), followed by parts panel (`order: 2`) and dossier (`order: 3`). Zero horizontal overflow at 320/390/768px viewports. All interaction contracts, component IDs, phase triggers, lifecycle observers, and Three.js runtime source are preserved intact.
+- T3 outcome verified: tokenized MOSFET diagram with semantic CSS variables for dark/light themes; explicit SVG electron animation lifecycle governed by gate state, reduced motion, visibility, and page cache; accessible touch targets (>=44px) on all interactive demo controls across all five chapters; verified zero regressions on all five interactive experiments.
+- Commands: `pnpm build` exit 0, six static routes; `git diff --check` exit 0.
 
 ## Rollback
 
@@ -70,4 +71,4 @@ Revert this feature's local work-unit commits to return to `8f847b2`; retain the
 
 ## Next step
 
-Commit verified T2 changes, then execute T3 — Finish the reading and responsive experience across all five chapters and experiments.
+All tasks (T1, T2, T3) of the silicon learning instrument feature are complete and verified locally. The project is fully up to date and ready for review or deployment.

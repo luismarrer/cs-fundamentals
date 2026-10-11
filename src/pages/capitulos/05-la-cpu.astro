@@ -69,9 +69,9 @@ import ChapterLayout from '../../layouts/ChapterLayout.astro';
       </div>
     </div>
     <div class="demo-row">
-      <button class="action action-primary" id="btn-step">Paso ▸</button>
-      <button class="action" id="btn-run">Ejecutar todo ▸▸</button>
-      <button class="action" id="btn-cpu-reset">Reiniciar ↺</button>
+      <button class="action action-primary" id="btn-step" aria-label="Avanzar un paso del ciclo fetch-decode-execute">Paso ▸</button>
+      <button class="action" id="btn-run" aria-label="Ejecutar todas las instrucciones hasta HALT">Ejecutar todo ▸▸</button>
+      <button class="action" id="btn-cpu-reset" aria-label="Reiniciar simulación de la CPU">Reiniciar ↺</button>
     </div>
     <div class="cpu-log" id="cpu-log">Pulsa «Paso» para empezar. La CPU hará fetch de la celda 0.</div>
   </div>
