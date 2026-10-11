@@ -105,17 +105,16 @@
     .opening-caption { top: 12px; left: 14px; max-width: calc(100% - 135px); }
     .opening-caption p { font-size: .74rem; }
     .opening-instructions { left: 14px; bottom: 8px; font-size: .52rem; max-width: calc(100% - 28px); }
-    .opening-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 6px 10px; gap: 6px; }
-    .opening-toggle, .opening-underside { width: 100%; min-height: 44px; padding: 6px 11px; font-size: .74rem; }
-    .opening-camera { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); width: 100%; gap: 4px; }
-    .opening-camera button { width: 100%; height: 44px; min-height: 44px; font-size: .8rem; }
+    .opening-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 8px 10px; gap: 6px; backdrop-filter: none; }
+    .opening-tools .opening-toggle, .opening-tools .opening-underside { width: 100%; height: 44px; min-height: 44px; padding: 8px 12px; font-size: .8125rem; }
+    .opening-camera { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 44px); width: 100%; justify-content: center; gap: 6px; }
+    .opening-camera button { width: 44px; height: 44px; min-height: 44px; padding: 0; font-size: .875rem; }
     .camera-divider { display: none; }
-    .opening-model-note { grid-column: 1 / -1; font-size: .5rem; text-align: center; }
+    .opening-model-note { grid-column: 1 / -1; width: 100%; font-size: .625rem; text-align: center; }
   }
   @media (max-width: 380px) {
-    .opening-caption { top: 10px; left: 10px; max-width: calc(100% - 118px); }
+    .opening-caption { top: 10px; left: 10px; max-width: calc(100% - 135px); }
     .opening-caption p { font-size: .7rem; }
-    .opening-toggle, .opening-underside { padding: 5px 9px; font-size: .7rem; gap: 6px; }
-    .opening-camera button { width: 100%; height: 40px; min-height: 40px; font-size: .74rem; }
+
   }
 </style>
