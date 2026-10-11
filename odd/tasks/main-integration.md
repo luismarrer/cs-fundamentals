@@ -17,7 +17,7 @@ Combine both completed feature branches without losing the CPU underside control
 - Delivery: `ask-on-risk`, approximately 250 authored integration lines forecast, excluding previously committed branch history. Record the actual merge-unit count before committing; no PR requested.
 
 ## Tasks
-- [ ] **T1 — Combine and verify the feature branches.** Delegate the one-file conflict resolution, retain the automatically merged instrument/MOSFET fixes, verify current merged bytes and close with a Conventional Commit on the integration branch.
+- [x] **T1 — Combine and verify the feature branches.** Closed in merge work-unit `a4ac7e6`; one-file resolution and bounded sizing correction retained both intents and passed functional, independent and browser checks.
 - [ ] **T2 — Advance local main.** Fast-forward main to the verified integration commit, confirm both source tips are ancestors and preserve the worktree. Route: inline, mechanical Git transition with known endpoints; close with a documentation work-unit commit recording observed evidence.
 - [ ] **T3 — Push the confirmed destination.** Ask one focused remote destination/session question, then perform only the authorized non-force main push and verify its result. Route: inline Git delivery, no source mutation; record the outcome after it is observed.
 
@@ -36,8 +36,8 @@ Combine both completed feature branches without losing the CPU underside control
 - Current-production browser passed underside/open/close/reset, preserving ALU selection and DECODE/lid state across camera reset. At 320/390px all nine toolbar centers are unobscured with no overflow; all buttons are 44px high and camera buttons 44px wide. One bounded correction strengthened the action selector after real computed sizing revealed 33px actions despite the declared minimum.
 - Protected unchanged lifecycle/fallback fixtures were not rerun; endpoint conservation and independent inspection were used. No new deterministic RED was claimed for this CSS integration.
 - Screenshot: `/Users/luis/.codex/visualizations/2026/10/10/01a12817-6f91-75e1-95d5-9435fd0b27d8/main-integration-verified.jpg`; existing production preview on `127.0.0.1:4327` retained and viewport override reset.
-- Integration commit and final authored count: pending; remote destination/session confirmation remains pending.
+- Integration commit: `a4ac7e689b07819143ff319157b3f0580cdf9117`, with source endpoints as its two parents. Authored integration count: 177 additions/deletions including this task document, below the delivery threshold. Remote destination/session confirmation remains pending.
 - Rollback boundary: retain source branches and the original main commit above; do not perform destructive rollback without user approval.
 
 ## Next step
-Commit the verified integration, fast-forward local main and record both endpoint ancestry checks; then ask the missing remote destination/session question before any push or other remote operation.
+Fast-forward local main to the verified integration and its tracking closure, record both endpoint ancestry checks, then ask the missing remote destination/session question before any push or other remote operation.
