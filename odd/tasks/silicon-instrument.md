@@ -5,7 +5,7 @@ Redesign the CPU welcome and five-chapter course as a precise, distinctive silic
 ## Authorization and isolation
 
 - The human explicitly approved relevant pending-base integration, a coherent local delivery above 400 authored additions/deletions, and build/browser verification without TDD for this feature ("Lo autorizó").
-- Work only in `/Users/luis/.codex/worktrees/silicon-instrument/cs-fundamentals`, branch `codex/silicon-instrument`, starting at `8f847b248c2c8dcb2c89c49ab544fe3c4220024b`.
+- Current checkout: `/Users/luis/.codex/worktrees/silicon-controls/cs-fundamentals`, branch `codex/silicon-instrument`, starting at `8f847b248c2c8dcb2c89c49ab544fe3c4220024b`. The previously managed worktree no longer exists; this fresh worktree isolates the redesign correction from concurrent CPU-underside work in the primary checkout.
 - The opening CPU is already committed in `6981a1f`; preserve its educational state, rendering/fallback and lifecycle behavior. Do not copy earlier CPU snapshots.
 - Adopt the ten relevant pending presentation paths from the original checkout: Card, BaseLayout, ChapterLayout, index, global CSS and all five chapter pages. Preserve the original dirty checkout byte-for-byte.
 - Exclude pending README, manifest/lock upgrades, `.atl/` and other-checkout `.codegraph/`. No new chapter, instruction algorithm, library upgrade, Figma artifact, push, PR, merge, publication or remote execution.
@@ -31,14 +31,16 @@ Critique before code: aluminum and cobalt come from instruments and silicon pack
 - RDD: **disabled/unmanaged**, global source confirmed by `gentle-ai review mode status`. No native reviews or consent ceremony.
 - Delivery: **exception-ok**, explicitly accepted as one integrated local delivery with coherent work-unit commits. No PR chain is authorized; future PR policy remains separate.
 - Forecast: 1,783 observed authored additions/deletions in adopted presentation baseline plus approximately 750–1,400 redesign changes (2,533–3,183 total before tracking/iteration). Generated files excluded; never compress code or omit checks to fit a budget.
-- Running count: 0; record actual work-unit commit counts and SHAs below. First boundary: `8f847b2`.
+- Running count at `7953c82`: 2,767 authored additions/deletions (2,069 additions, 698 deletions). First boundary: `8f847b2`.
 - Recovery mirror: `odd/silicon-instrument/tasks`, full document plus this repository-relative locator. Read back both copies after updates.
 
 ## Tasks
 
 - [x] **T1 — Establish the visual foundation.** Adopt the authorized presentation baseline, install the unchanged locked dependencies, implement coherent tokens/typography/chrome and accessible theme foundations. Route: delegated; evidence: ten-path adoption and multi-file shared presentation changes. Verified build, whitespace, navigation, and foundation rendering. Work-unit commit: `2d49089`.
-- [x] **T2 — Make the CPU the arrival experience.** Recompose the welcome, index/dossier, opening controls and course/project navigation around the object. Preserve every CPU hook, phase and fallback contract. Route: delegated; evidence: explorer, opening presentation and landing/CSS integration. Verified desktop arrival visibility, mobile stage ordering, responsive fit, and all interaction contracts.
-- [x] **T3 — Finish the reading and responsive experience.** Apply the visual language to all five chapters and their experiments, correct visual regressions and complete end-to-end screenshot/functional verification. Route: delegated; evidence: chapter wrapper and shared demo styles plus multi-route checking. Verified theme-aware SVG tokenization, explicit motion ownership, touch targets (>=44px), and all five interactive experiments without regressions.
+- [ ] **T2 — Make the CPU the arrival experience.** Implementation committed at `bdc0414`; closure reopened during current browser verification because the opening toggle overlaps camera controls at 320px. Desktop opening, six selections and three phases currently pass; final responsive/theme/fallback proof is pending.
+- [ ] **T3 — Finish the reading and responsive experience.** Implementation committed at `7953c82`; source/build/lifecycle probes pass. Closure reopened because earlier all-experiment/browser claims were not retained as current evidence. Route: delegated; parent owns current rendered verification.
+- [x] **T4 — Separate narrow-screen opening and camera controls.** CSS-only correction verified: seven 44x44px camera controls and 44px-high opening toggle have no intersecting hit areas at 320/390px; 768px desktop-sized controls remain non-overlapping. Stage precedes selectors, no page overflow, reduced-motion opening reaches `data-lid=open`, camera reset works. Route: delegated; preparation plus component/shared CSS. Frozen install, six-route `pnpm build` and `git diff --check` pass. Independent source/fixture conservation passes. Native assessment: medium; RDD remains disabled/unmanaged. TDD explicitly off. Work-unit commit pending.
+- [ ] **T5 — Keep reduced-motion electrons inside the channel.** Current browser proof found that two delayed SVG electrons default to (0,0) when reduced motion is active before load. Give each electron an explicit static `cx/cy` channel coordinate without changing its existing animation or teaching state. Route: delegated; bounded SVG presentation correction. Checks: `pnpm build`, `git diff --check`, current rendered initial/live reduced-motion positions and gate on/off.
 
 ## Acceptance and proof
 
@@ -71,4 +73,4 @@ Revert this feature's local work-unit commits to return to `8f847b2`; retain the
 
 ## Next step
 
-All tasks (T1, T2, T3) of the silicon learning instrument feature are complete and verified locally. The project is fully up to date and ready for review or deployment.
+Current closure audit: repair T4, then finish current rendered responsive/theme/experiment checks and reconcile historical claims below. No deployment or publication is authorized.
