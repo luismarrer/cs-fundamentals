@@ -14,7 +14,7 @@ The user explicitly requested underside viewing, inspired by holding an AMD Ryze
 - Delivery: `ask-on-risk`; forecast approximately 250 authored additions/deletions. One coherent local work unit expected below 400; count actual changes before committing. No PR authorized.
 
 ## Task
-- [ ] **T1 — Deliver in-hand underside inspection.** Extend pointer and keyboard orbit below the chip, prevent the opaque bench from hiding the base, add a schematic underside contact array, and provide a discoverable underside view/reset. Verify and commit the coherent scene/UI/test change. Route: delegated; trigger: non-trivial geometry and control changes plus executable regression.
+- [x] **T1 — Deliver in-hand underside inspection.** Extend pointer and keyboard orbit below the chip, prevent the opaque bench from hiding the base, add a schematic underside contact array, and provide a discoverable underside view/reset. Verified and committed in `005e88f`. Route: delegated; trigger: non-trivial geometry and control changes plus executable regression.
 
 ## Acceptance
 - A visitor can rotate below the CPU using drag and keyboard-equivalent controls, and clearly see the underside contact pattern rather than the lab floor.
@@ -35,8 +35,8 @@ The user explicitly requested underside viewing, inspired by holding an AMD Ryze
 - The first 320px check found the underside action covering the absolute lid toggle. One bounded correction moved actions into normal flow, enlarged narrow camera controls and added warm no-shadow underside fill; independently reverified before browser acceptance. Final 320/390px checks found no overflow and all nine toolbar button centers unobscured; camera heights are 40/44px respectively.
 - Existing fallback, visibility and reduced-motion lifecycle were structurally inspected and preserved; their external browser fixtures were not rerun for this change.
 - Screenshot: `/Users/luis/.codex/visualizations/2026/10/10/01a12817-6f91-75e1-95d5-9435fd0b27d8/cpu-underside-verified.jpg`. Preview viewport override was reset and the deliverable tab retained.
-- Commit: pending. Authored source/test count: 158 (137 additions, 21 deletions), below the delivery threshold with this document.
+- Work-unit commit: `005e88fb60e8444339b5d47e2fb90bae8c8c533d` (`feat(cpu): enable in-hand underside inspection`). Source/test count: 158 (137 additions, 21 deletions); total work-unit count: 200 including this document. This closure adds 6 authored lines, retaining the single-unit delivery strategy below 400.
 - Rollback: revert only this work unit's scene/UI/regression changes, restoring upper-only orbit; keep the completed CPU opening and silicon-instrument redesign.
 
 ## Next step
-Record the verified local work-unit commit, close T1 and synchronize the full Engram mirror. Push, PR and publication remain unauthorized.
+Complete locally; the verified underside preview is ready for user inspection. The unchanged fallback/motion fixtures and existing large-chunk warning remain explicitly noted above. Push, PR and publication remain unauthorized.
