@@ -18,7 +18,7 @@ Combine both completed feature branches without losing the CPU underside control
 
 ## Tasks
 - [x] **T1 — Combine and verify the feature branches.** Closed in merge work-unit `a4ac7e6`; one-file resolution and bounded sizing correction retained both intents and passed functional, independent and browser checks.
-- [ ] **T2 — Advance local main.** Fast-forward main to the verified integration commit, confirm both source tips are ancestors and preserve the worktree. Route: inline, mechanical Git transition with known endpoints; close with a documentation work-unit commit recording observed evidence.
+- [x] **T2 — Advance local main.** Main fast-forwarded to verified integration and tracking closure `9862daf`; both source-tip ancestry checks passed and the tracked worktree remained clean. Route: inline mechanical Git transition; this documentation work unit records its observed evidence on the integration branch before a final main fast-forward.
 - [ ] **T3 — Push the confirmed destination.** Ask one focused remote destination/session question, then perform only the authorized non-force main push and verify its result. Route: inline Git delivery, no source mutation; record the outcome after it is observed.
 
 ## Acceptance
@@ -37,7 +37,8 @@ Combine both completed feature branches without losing the CPU underside control
 - Protected unchanged lifecycle/fallback fixtures were not rerun; endpoint conservation and independent inspection were used. No new deterministic RED was claimed for this CSS integration.
 - Screenshot: `/Users/luis/.codex/visualizations/2026/10/10/01a12817-6f91-75e1-95d5-9435fd0b27d8/main-integration-verified.jpg`; existing production preview on `127.0.0.1:4327` retained and viewport override reset.
 - Integration commit: `a4ac7e689b07819143ff319157b3f0580cdf9117`, with source endpoints as its two parents. Authored integration count: 177 additions/deletions including this task document, below the delivery threshold. Remote destination/session confirmation remains pending.
+- Local main fast-forwarded from `bf38195` to `9862daf`; both source endpoints are ancestors. Feature branches, isolated worktrees and existing untracked inventory were preserved. Tracking-only closure adds no source changes; structural readback and ancestry/diff checks cover this unit, with no additional runtime boundary.
 - Rollback boundary: retain source branches and the original main commit above; do not perform destructive rollback without user approval.
 
 ## Next step
-Fast-forward local main to the verified integration and its tracking closure, record both endpoint ancestry checks, then ask the missing remote destination/session question before any push or other remote operation.
+Confirm `origin/main` and the configured repository Git authentication/session with the user before any push or other remote operation. T3 remains pending; no remote contact has occurred.
