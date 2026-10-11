@@ -647,28 +647,33 @@ const pinYs = [145, 195, 245, 295, 345, 395, 445];
 </script>
 
 <style>
-  .cpu-explorer { padding-top: 24px; }
-  .explorer-masthead { margin-bottom: 20px; gap: 32px; }
-  .explorer-masthead h1 { font-size: clamp(2.2rem, 3.7vw, 3.7rem); line-height: .98; }
-  .section-label { margin-bottom: 10px; }
-  .explorer-intro > p { font-size: .94rem; line-height: 1.5; }
-  .explorer-meta { margin-top: 12px; }
+  .cpu-explorer { padding-top: clamp(16px, 2.5vh, 26px); }
+  .explorer-masthead { margin-bottom: clamp(14px, 2vh, 20px); gap: clamp(24px, 4vw, 56px); }
+  .explorer-masthead h1 { font-size: clamp(2rem, 3.4vw, 3.25rem); line-height: 1.06; letter-spacing: -0.04em; }
+  .section-label { margin-bottom: 8px; }
+  .explorer-intro > p { font-size: clamp(0.88rem, 1.1vw, 0.98rem); line-height: 1.55; }
+  .explorer-meta { margin-top: 10px; }
   .cpu-workbench { min-height: 0; }
   .cpu-stage { align-self: start; }
-  .cpu-canvas { height: clamp(340px, 52vh, 440px); min-height: 0; }
+  .cpu-canvas { height: clamp(340px, 48vh, 440px); min-height: 320px; }
   .cpu-map { height: 100%; min-height: 0; }
   .cpu-canvas[data-renderer="ready"] .cpu-map { visibility: hidden; }
   .cpu-canvas[data-renderer="ready"] .canvas-coordinate,
   .cpu-canvas[data-renderer="ready"] .canvas-tip { visibility: hidden; }
-  @media (max-width: 820px) {
-    .cpu-explorer { padding-top: 18px; }
+  @media (max-width: 860px) {
+    .cpu-explorer { padding-top: 16px; }
     .explorer-masthead { gap: 14px; margin-bottom: 16px; }
-    .explorer-masthead h1 { font-size: clamp(2rem, 8vw, 3rem); }
+    .explorer-masthead h1 { font-size: clamp(1.85rem, 7vw, 2.75rem); }
     .explorer-intro > p { font-size: .84rem; }
-    .explorer-meta { margin-top: 9px; }
-    .cpu-stage { order: -1; width: 100%; min-height: 0; }
-    .cpu-canvas { height: clamp(320px, 44svh, 400px); }
-    .parts-panel { border-top: 1px solid var(--border); }
+    .explorer-meta { margin-top: 8px; }
+    .cpu-workbench { display: flex; flex-direction: column; }
+    .cpu-stage { order: 1; width: 100%; min-height: 0; }
+    .cpu-canvas { height: clamp(320px, 46svh, 420px); min-height: 300px; }
+    .parts-panel { order: 2; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .part-dossier { order: 3; border-top: 0; }
+  }
+  @media (max-width: 620px) {
+    .cpu-canvas { height: clamp(300px, 44svh, 380px); min-height: 280px; }
   }
   @media (max-width: 380px) {
     /* Keep the original landing navigation within narrow viewports. */

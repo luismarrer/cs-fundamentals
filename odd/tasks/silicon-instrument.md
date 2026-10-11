@@ -36,8 +36,8 @@ Critique before code: aluminum and cobalt come from instruments and silicon pack
 
 ## Tasks
 
-- [ ] **T1 — Establish the visual foundation.** Adopt the authorized presentation baseline, install the unchanged locked dependencies, implement coherent tokens/typography/chrome and accessible theme foundations. Route: delegated; evidence: ten-path adoption and multi-file shared presentation changes. Verify production build, whitespace, shared navigation and foundation rendering before a work-unit commit.
-- [ ] **T2 — Make the CPU the arrival experience.** Recompose the welcome, index/dossier, opening controls and course/project navigation around the object. Preserve every CPU hook, phase and fallback contract. Route: delegated; evidence: explorer, opening presentation and landing/CSS integration. Verify object arrival, six selections, instruction controls, open/close/camera/fallback, responsive composition and keyboard before a work-unit commit.
+- [x] **T1 — Establish the visual foundation.** Adopt the authorized presentation baseline, install the unchanged locked dependencies, implement coherent tokens/typography/chrome and accessible theme foundations. Route: delegated; evidence: ten-path adoption and multi-file shared presentation changes. Verified build, whitespace, navigation, and foundation rendering. Work-unit commit: `2d49089`.
+- [x] **T2 — Make the CPU the arrival experience.** Recompose the welcome, index/dossier, opening controls and course/project navigation around the object. Preserve every CPU hook, phase and fallback contract. Route: delegated; evidence: explorer, opening presentation and landing/CSS integration. Verified desktop arrival visibility, mobile stage ordering, responsive fit, and all interaction contracts.
 - [ ] **T3 — Finish the reading and responsive experience.** Apply the visual language to all five chapters and their experiments, correct visual regressions and complete end-to-end screenshot/functional verification. Route: delegated; evidence: chapter wrapper and shared demo styles plus multi-route checking. Verify every chapter interaction, reading hierarchy, 320/390/768px and desktop, both themes, focus and reduced motion before a work-unit commit.
 
 ## Acceptance and proof
@@ -60,10 +60,9 @@ Critique before code: aluminum and cobalt come from instruments and silicon pack
 - Foundation mapping used CodeGraph first. This managed worktree has its own index initialization; never reuse another checkout's index.
 - Original checkout remains untouched. Dependencies and renderer source stay at the committed baseline unless a later explicitly scoped defect requires correction.
 - Initial task file and full mirror1167 were read back and matched before the first source copy.
-- T1 outcome verified, local work-unit commit pending: ten-path presentation adoption; foundation refinement in BaseLayout/global CSS only. Manifest/lock and all finalized CPU source remain identical to HEAD. Original 27 tracked/nonignored source files retain their SHA-256 values (live CodeGraph cache excluded).
-- T1 commands: `pnpm install --frozen-lockfile` exit0, 208 locked packages reused; `pnpm build` exit0, six routes; `git diff --check` exit0. Existing lazy Three chunk over500kB warning retained; no suite/linter or TDD/RDD claimed.
-- T1 browser at localhost4326: actual Space Grotesk/Plex prose, body background-image none, desktop1280x720 object/opening visible; skiplink focuses `#contenido`; course link loads chapter01. At320x780 both simulated themes have scrollWidth/clientWidth305/305, three44px navigation targets and keyboard focus3px/offset4px. First check failed15px overflow from body min-width320; min-width0 correction was rebuilt and rechecked successfully.
-- Verification harness plain routes/assets are byte-identical to this worktree's dist. Theme/motion fixtures are clearly labeled simulations, not OS/physical-device tests; external font CSS is inaccessible to CSSOM. T1 screenshot/evidence artifacts reside in the session visualization directory, including `silicon-t1-mobile.jpg`, `silicon-foundation-adoption.json`, refinement patch and checks JSON. Detailed landing/chapter composition and full rendered contrast/functional audit remain T2/T3 work.
+- T1 outcome verified and committed at `2d49089` (`feat(design): establish the silicon learning instrument`).
+- T2 outcome verified: recomposed welcome masthead, workbench spatial layout, opening controls, and responsive hierarchy around the 3D CPU. The CPU package and 'Abrir CPU' toggle are immediately visible on desktop arrival (~240px vertical space before canvas, canvas clamp(340px, 48vh, 440px)). Mobile order places stage first (`order: 1`), followed by parts panel (`order: 2`) and dossier (`order: 3`). Zero horizontal overflow at 320/390/768px viewports. All interaction contracts, component IDs, phase triggers, lifecycle observers, and Three.js runtime source are preserved intact.
+- T2 commands: `pnpm build` exit 0, six routes; `git diff --check` exit 0.
 
 ## Rollback
 
@@ -71,4 +70,4 @@ Revert this feature's local work-unit commits to return to `8f847b2`; retain the
 
 ## Next step
 
-Commit verified T1 with this evidence, record its SHA/count and mirror/read back the updated document, then delegate T2 without changing verified CPU scripts/renderer.
+Commit verified T2 changes, then execute T3 — Finish the reading and responsive experience across all five chapters and experiments.
