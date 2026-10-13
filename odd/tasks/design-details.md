@@ -12,7 +12,7 @@ The accepted T2 identity is a custom native-SVG open-die mark: filled open-packa
 
 - [x] **T1 — Shared polish.** Delegated direct: four source files plus a regression test required preparation and coordinated edits. It corrected `8 bit`, replaced the `⌁`, kept numeric chapter indices accessible while hiding only decorative project markers, and kept mobile simulator/navigation access usable.
 - [x] **T2 — Open-die logo.** Delegated direct: vector identity, layout/CSS, and regression coverage changed together. Current source and browser evidence confirm the final mark and retain T1 non-logo improvements.
-- [ ] **T3 — Deliver verified unit.** The user authorized committing and a regular push on the existing sole `main`; parent owns those Git/remote steps. This document is organized, but publication is not yet claimed.
+- [x] **T3 — Deliver verified unit.** Organized the portable record, committed source/tests/docs together and published the verified work unit with a regular push on the existing sole `main`. No extra branch or force push was used.
 
 ## Acceptance and current evidence
 
@@ -34,5 +34,6 @@ The accepted T2 identity is a custom native-SVG open-die mark: filled open-packa
 
 - Base: `f972bc15d6d0d1fd8763633810b35914f8ac4f69` on sole `main`; RDD is globally off and must remain off.
 - Authored source/test changes: 141 lines (61 additions + 22 deletions in tracked source; 58-line new regression test). Generated output and this tracking document are excluded.
-- Commit metadata: pending parent-created Conventional Commit; no branch, force push, PR, or publication assertion is recorded here.
+- Work-unit commit: `44b5e28c6813ae8c84a18ce235d41244206b78d6` — `fix(ui): polish branding and mobile navigation` (six files, 157 additions and 22 deletions, including tests and this document).
+- Publication: the work-unit commit reached GitHub `origin/main` through a verified regular push. This documentation receipt follows it; no PR or deployed-site/CI success is inferred.
 - Rollback boundary: revert only this unit's logo, navbar, glyph/copy, and regression-test changes; do not revert CPU simulation work.
