@@ -9,6 +9,7 @@ interface Props {
 
 const { href, num, title, external = false, ext } = Astro.props;
 const externalAttrs = external ? { target: '_blank', rel: 'noopener' } : {};
+const isDecorativeMarker = !/^\d+$/.test(num);
 ---
 
 <a
@@ -17,7 +18,7 @@ const externalAttrs = external ? { target: '_blank', rel: 'noopener' } : {};
   {...externalAttrs}
 >
   <span class="card-topline">
-    <span class="card-index">{num}</span>
+    <span class="card-index" aria-hidden={isDecorativeMarker ? 'true' : undefined}>{num}</span>
     <span class="card-trace" aria-hidden="true"></span>
     <span class="card-arrow" aria-hidden="true">{external ? '↗' : '→'}</span>
   </span>

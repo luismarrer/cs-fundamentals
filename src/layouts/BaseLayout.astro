@@ -8,6 +8,12 @@ interface Props {
 
 const { title, description } = Astro.props;
 const isCpuChapter = Astro.url.pathname.replace(/\/$/, '') === '/capitulos/05-la-cpu';
+const openDieMark = {
+  package: 'M5 4H31V12H26V10H10V26H26V24H31V32H5Z',
+  core: 'M21 14H29V22H21Z',
+};
+const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><style>path{fill:#3159d8}@media(prefers-color-scheme:dark){path{fill:#a3b8ff}}</style><path d="${openDieMark.package}"/><path d="${openDieMark.core}"/></svg>`;
+const faviconHref = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
 ---
 
 <!doctype html>
@@ -27,7 +33,7 @@ const isCpuChapter = Astro.url.pathname.replace(/\/$/, '') === '/capitulos/05-la
     />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='15' y='15' width='70' height='70' rx='14' fill='%233159d8'/><path d='M32 32h36v36H32zM8 30h14M8 50h14M8 70h14M78 30h14M78 50h14M78 70h14M30 8v14M50 8v14M70 8v14M30 78v14M50 78v14M70 78v14' fill='none' stroke='%23ffffff' stroke-width='6'/></svg>"
+      href={faviconHref}
     />
   </head>
   <body class="bg-bg font-sans leading-relaxed text-ink antialiased">
@@ -36,8 +42,9 @@ const isCpuChapter = Astro.url.pathname.replace(/\/$/, '') === '/capitulos/05-la
       <div class="site-header-inner">
         <a class="site-brand" href="/" aria-label="CPU abierta, página principal">
           <span class="brand-chip" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M7 7h10v10H7zM10 10h4v4h-4z" stroke="currentColor" stroke-width="1.5"></path>
+            <svg data-open-die-mark viewBox="0 0 36 36">
+              <path d={openDieMark.package} fill="currentColor"></path>
+              <path d={openDieMark.core} fill="currentColor"></path>
             </svg>
           </span>
           <span class="site-brand-copy">
@@ -50,9 +57,10 @@ const isCpuChapter = Astro.url.pathname.replace(/\/$/, '') === '/capitulos/05-la
           <a href="/#recorrido">Recorrido</a>
           <a href="/#proyectos">Proyectos</a>
         </nav>
-        <a class="header-simulator" href="/capitulos/05-la-cpu" aria-current={isCpuChapter ? 'page' : undefined}>
-          <span>05</span>
-          Simulador CPU
+        <a class="header-simulator" href="/capitulos/05-la-cpu" aria-label="Abrir Simulador CPU" aria-current={isCpuChapter ? 'page' : undefined}>
+          <span class="simulator-index" aria-hidden="true">05</span>
+          <span class="simulator-label-full" aria-hidden="true">Simulador CPU</span>
+          <span class="simulator-label-mobile" aria-hidden="true">Simulador</span>
         </a>
       </div>
     </header>
